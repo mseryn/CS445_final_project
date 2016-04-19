@@ -18,10 +18,17 @@ import datetime
 from datetime import *
 
 class Order():
+
+    _id_counter = 0
+
     def __init__(self, initialized_customer, initialized_billing_address, initialized_delivery_address, 
             order_date = datetime.today(), 
             delivery_date = (datetime.today() + timedelta(1)), 
             items = [], surcharge = 0.0, instructions = ""):
+
+
+        self._order_id = self._id_counter
+        self._id_counter += 1
 
         if isinstance(initialized_customer, customer.Customer):
             self._customer = initialized_customer
@@ -50,6 +57,10 @@ class Order():
         self._instructions = instructions
         self._total_item_cost = 0.0
             
+
+    def get_order_id(self):
+        return self._order_id
+
     def get_order_date(self):
         return self._order_date
 

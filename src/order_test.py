@@ -19,6 +19,23 @@ import address
 import datetime
 from datetime import *
 
+# Testing order_id
+def test_order_id():
+    test_customer = customer.Customer("default last", "default first", "default email", 123456789)
+    test_address_delivery = address.Address("default street 1", "default city 1", "default state 1", 12345)
+    test_address_billing = address.Address("default street 2", "default city 2", "default state 2", 67890)
+    
+    test_order = order.Order(test_customer, test_address_delivery, test_address_billing)
+    assert((test_order.get_order_id() == 0), "first order ID not correctly set")
+
+def test_order_id_incriment():
+    test_customer = customer.Customer("default last", "default first", "default email", 123456789)
+    test_address_delivery = address.Address("default street 1", "default city 1", "default state 1", 12345)
+    test_address_billing = address.Address("default street 2", "default city 2", "default state 2", 67890)
+    
+    test_order = order.Order(test_customer, test_address_delivery, test_address_billing)
+    assert((test_order.get_order_id() == 1), "incrimented order ID not correctly set")
+
 # Testing order_date
 
 def test_order_default_order_date():
