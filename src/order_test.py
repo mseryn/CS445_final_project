@@ -16,10 +16,12 @@ import order
 import item
 import customer
 import address
+
 import datetime
 from datetime import *
 
 # Testing order_id
+
 def test_order_id():
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_address_delivery = address.Address("default street 1", "default city 1", "default state 1", 12345)
@@ -35,6 +37,44 @@ def test_order_id_incriment():
     
     test_order = order.Order(test_customer, test_address_delivery, test_address_billing)
     assert((test_order.get_order_id() == 1), "incrimented order ID not correctly set")
+
+# Testing delivery_status
+
+def test_order_delivery_status_at_creation():
+    test_customer = customer.Customer("default last", "default first", "default email", 123456789)
+    test_address_delivery = address.Address("default street 1", "default city 1", "default state 1", 12345)
+    test_address_billing = address.Address("default street 2", "default city 2", "default state 2", 67890)
+    
+    test_order = order.Order(test_customer, test_address_delivery, test_address_billing)
+    assert((test_order.get_delivery_status == False), "delivery status not 'False' when order first created")
+
+def test_order_delivery_status_set_true():
+    test_customer = customer.Customer("default last", "default first", "default email", 123456789)
+    test_address_delivery = address.Address("default street 1", "default city 1", "default state 1", 12345)
+    test_address_billing = address.Address("default street 2", "default city 2", "default state 2", 67890)
+    
+    test_order = order.Order(test_customer, test_address_delivery, test_address_billing)
+    test_order.set_delivery_status("True")
+    assert((test_order.get_delivery_status == True), "set delivery status in object not functioning")
+
+def test_order_delivery_status_set_false():
+    test_customer = customer.Customer("default last", "default first", "default email", 123456789)
+    test_address_delivery = address.Address("default street 1", "default city 1", "default state 1", 12345)
+    test_address_billing = address.Address("default street 2", "default city 2", "default state 2", 67890)
+    
+    test_order = order.Order(test_customer, test_address_delivery, test_address_billing)
+    test_order.set_delivery_status("True")
+    test_order.set_delivery_status("False")
+    assert((test_order.get_delivery_status == False), "set delivery status in object not functioning")
+
+def test_order_delivery_status_invalid():
+    test_customer = customer.Customer("default last", "default first", "default email", 123456789)
+    test_address_delivery = address.Address("default street 1", "default city 1", "default state 1", 12345)
+    test_address_billing = address.Address("default street 2", "default city 2", "default state 2", 67890)
+    
+    test_order = order.Order(test_customer, test_address_delivery, test_address_billing)
+    test_order.set_delivery_status("this")
+    assert((test_order.get_delivery_status == False), "set delivery status in object allowed for invalid value")
 
 # Testing order_date
 

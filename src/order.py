@@ -30,6 +30,8 @@ class Order():
         self._order_id = self._id_counter
         self._id_counter += 1
 
+        self._delivery_status = False
+
         if isinstance(initialized_customer, customer.Customer):
             self._customer = initialized_customer
         if isinstance(initialized_billing_address, address.Address):
@@ -60,6 +62,21 @@ class Order():
 
     def get_order_id(self):
         return self._order_id
+
+    def get_delivery_status(self):
+        return self._delivery_status
+
+    def set_delivery_status(self, new_status):
+        """
+        Takes a string in the form 'True' or 'False' and sets the delivery
+        flag accordingly.
+        """
+        if new_status.lower() == "true":
+            self._delivery_status = True
+        elif new_status.lower() == "false":
+            self._delivery_status = False
+        else:
+            print("\nError: delivery status must be set to either 'True' or 'False'.  Status unchanged.")
 
     def get_order_date(self):
         return self._order_date
