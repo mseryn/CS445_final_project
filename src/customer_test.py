@@ -15,6 +15,16 @@
 import address
 import customer
 
+# Testing customer_id
+
+def test_customer_id():
+    test_customer = customer.Customer("test Last Name", "test First Name", "test email address", 123456789)
+    assert((test_customer.get_customer_id() == 0), "first customer ID not correctly set")
+
+def test_customer_id_incrimented():
+    test_customer = customer.Customer("test Last Name", "test First Name", "test email address", 123456789)
+    assert((test_customer.get_customer_id() == 1), "incrimented customer ID not correctly set")
+
 # Testing last_name
 
 def test_customer_initialize_last_name():

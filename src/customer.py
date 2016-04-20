@@ -11,7 +11,13 @@
 ###
 
 class Customer():
+    _customer_id_counter = 0
+
     def __init__(self, last_name, first_name, email, phone_number):
+
+        self._customer_id = self._customer_id_counter
+        self._customer_id_counter += 1
+
         self._last_name = str(last_name)
         self._first_name = str(first_name)
         self._email = str(email)
@@ -22,6 +28,10 @@ class Customer():
                 self._phone_number = phone_number
         else:
             print("\nError: phone number must be 9-digit integer value.  Setting to 5555555555.")
+
+
+    def get_customer_id(self):
+        return self._customer_id
 
     def get_last_name(self):
         return self._last_name

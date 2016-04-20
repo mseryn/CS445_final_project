@@ -19,7 +19,7 @@ from datetime import *
 
 class Order():
 
-    _id_counter = 0
+    _order_id_counter = 0
 
     def __init__(self, initialized_customer, initialized_billing_address, initialized_delivery_address, 
             order_date = datetime.today(), 
@@ -27,8 +27,8 @@ class Order():
             items = [], surcharge = 0.0, instructions = ""):
 
 
-        self._order_id = self._id_counter
-        self._id_counter += 1
+        self._order_id = self._order_id_counter
+        self._order_id_counter += 1
 
         self._delivery_status = False
 
