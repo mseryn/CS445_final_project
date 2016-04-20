@@ -59,7 +59,6 @@ class Order():
 
         self._surcharge = surcharge
         self._instructions = instructions
-        self._total_item_cost = 0.0
 
         self._all_customers.append(self._customer)
         self._all_orders.append(self)
@@ -103,7 +102,14 @@ class Order():
         return self._delivery_date
 
     def get_total_cost(self):
-        return self._total_item_cost + self._surcharge
+        # To determine if surcharge applies:
+        # weekday() applied to a datetime object returns the day of week
+        # where Monday = 0 and Sunday = 6.
+        # Surcharges apply only on weekends, IE when return value is 5 or 6.
+        if self._delivery_date.weekday() > 4:
+            return self._total_item_cost + self._surcharge
+        else:
+            return self._total_item_cost
 
     def get_surcharge(self):
         return self._surcharge
@@ -139,12 +145,3 @@ class Order():
     def set_delivery_date(self, new_date):
         if type(new_date) is datetime.datetime:
             self._order_date = new_date
-
-    def should_surcharge_apply(self):
-        # weekday() applied to a datetime object returns the day of week
-        # where Monday = 0 and Sunday = 6.
-        # Surcharges apply only on weekends, IE when return value is 5 or 6.
-        if self._delivery_date.weekday() > 4:
-            return True
-        else:
-            return False

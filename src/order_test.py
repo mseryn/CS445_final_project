@@ -237,17 +237,6 @@ def test_order_set_surcharge():
     test_order.set_surcharge(15.25)
     assert((test_order.get_surcharge() == 15.25), "set surcharge in order not correctly set")
 
-def test_order_should_surcahrge_apply():
-    test_customer = customer.Customer("default last", "default first", "default email", 123456789)
-    test_address_delivery = address.Address("default street 1", "default city 1", "default state 1", 12345)
-    test_address_billing = address.Address("default street 2", "default city 2", "default state 2", 67890)
-    
-    test_order = order.Order(test_customer, test_address_delivery, test_address_billing)
-    if datetime.today().weekday() > 4:
-        assert((test_order.should_surcharge_apply() == True), "should_surcharge_apply in order returned false for a weekend - this is incorrect")
-    else:
-        assert((test_order.should_surcharge_apply() == False), "should_surcharge_apply in order returned true for a weekday - this is incorrect")
-
 # Testing instructions
 
 def test_order_default_instructions():
