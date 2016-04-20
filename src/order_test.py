@@ -20,6 +20,34 @@ import address
 import datetime
 from datetime import *
 
+# Testing all_orders
+
+def test_order_get_all_orders():
+    test_customer = customer.Customer("default last", "default first", "default email", 123456789)
+    test_address_delivery = address.Address("default street 1", "default city 1", "default state 1", 12345)
+    test_address_billing = address.Address("default street 2", "default city 2", "default state 2", 67890)
+    test_order = order.Order(test_customer, test_address_delivery, test_address_billing)
+
+    assert((order.Order.get_all_orders() == [test_order]), "static method retrieval of all orders not correctly working")
+
+def test_order_get_order_by_id():
+    test_customer = customer.Customer("default last", "default first", "default email", 123456789)
+    test_address_delivery = address.Address("default street 1", "default city 1", "default state 1", 12345)
+    test_address_billing = address.Address("default street 2", "default city 2", "default state 2", 67890)
+    test_order = order.Order(test_customer, test_address_delivery, test_address_billing)
+
+    assert((order.Order.get_order_by_id(test_order.get_order_id()) == test_order.get_order_id()), "static method retrieval of order by ID not correctly working")
+
+# Testing all_customers
+
+def test_order_get_all_customers():
+    test_customer = customer.Customer("default last", "default first", "default email", 123456789)
+    test_address_delivery = address.Address("default street 1", "default city 1", "default state 1", 12345)
+    test_address_billing = address.Address("default street 2", "default city 2", "default state 2", 67890)
+    test_order = order.Order(test_customer, test_address_delivery, test_address_billing)
+
+    assert((order.Order.get_all_customers() == [test_customer]), "static method retrieval of all customers not correctly working")
+
 # Testing order_id
 
 def test_order_id():

@@ -19,6 +19,8 @@ from datetime import *
 
 class Order():
 
+    _all_orders = []
+    _all_customers = []
     _order_id_counter = 0
 
     def __init__(self, initialized_customer, initialized_billing_address, initialized_delivery_address, 
@@ -58,7 +60,23 @@ class Order():
         self._surcharge = surcharge
         self._instructions = instructions
         self._total_item_cost = 0.0
-            
+
+        self._all_customers.append(self._customer)
+        self._all_orders.append(self)
+
+    @staticmethod
+    def get_all_orders():
+        return Order._all_orders
+
+    @staticmethod
+    def get_order_by_id(order_id):
+        for order in Order._all_orders:
+            if order.get_order_id() == order_id:
+                return order
+
+    @staticmethod
+    def get_all_customers():
+        return Order._all_customers
 
     def get_order_id(self):
         return self._order_id
