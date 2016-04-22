@@ -35,6 +35,9 @@ class Customer():
             self._customer_id_counter += 1
             self._all_customers.append(self)
 
+    @staticmethod
+    def get_all_customers():
+        return Customer._all_customers
 
     def get_customer_id(self):
         return self._customer_id
