@@ -71,8 +71,6 @@ class DelectableREST():
                 'post_order_delivered_json_dict', self.post_order_delivered_json_dict,
                 methods = ['POST'])
         
-
-
     def run(self):
         self.app.run(debug = True)
 
@@ -163,7 +161,6 @@ class DelectableREST():
         return flask.jsonify(orders_for_date) , 200
 
     def put_order_json_dict(self):
-
         # Ensuring all necessary fields are filled:
         if not flask.request.json 
         or not 'delivery_date' in flask.request.json
@@ -178,11 +175,8 @@ class DelectableREST():
             print("Error: not all components for order present.  Aborting.")
         else:
             # getting the date:
-            datestring = flask.request.json['delivery_date']
-            parsed_year = int(datestring[0:4])
-            parsed_month = int(datestring[4:6])
-            parsed_day = int(datestring[6:8])
-            parsed_date = datetime.datetime(year = parsed_year, month = parsed_month, day = parsed_day)
+            parsed_date = string_to_date(flask.request.json['delivery_date']
+
             # getting address
             address_string = flask.request.json['delivery_address']
             
@@ -232,7 +226,8 @@ class DelectableREST():
                 order_item['order_date'] = date_to_string(individual_order.get_order_date())
                 order_item['delivery_date'] = date_to_string(individual_order.get_delivery_date())
                 order_customer = individual_order.get_customer()
-                order_item['ordered_by'] = {"name": (order_customer.get_first_name() + order_customer.get_last_name()),
+                order_item['ordered_by'] = {"name": (order_customer.get_first_name() 
+                                                    + order_customer.get_last_name()),
                                             "email": order_customer.get_email(),
                                             "phone": order_customer.get_phone_number() }
                 order_item['delivery_address'] = individual_order.get_delivery_address()
@@ -256,7 +251,7 @@ class DelectableREST():
         for individual_order in orders:
             if individual_order.get_order_id() == order_id:
                 order_found = True
-                individual_order.set_delivery_status(order_id, "canceled")
+                individual_order.set_delivery_status(order_id, "cancelled")
         if order_found:
             return
         else:
@@ -354,7 +349,28 @@ class DelectableREST():
             report_dict = {}
         return flask.jsonify(reports_list) , 200
 
-    def get_report_in_range_json_dict(self, report_id) ????
+    def get_report_in_range_json_dict(self, report_id):
+        if not flask.request.json
+            # Not an expressly specified return - okay? QUESTION
+            print("Error: report id required")
+            return None, 400
+        else:
+            # get report corresponding to report_id
+            report = DelectableReport.report.Report()
+            reports = report.get_all_reports()
+            report_found = False
+            for key in reports:
+                if key == report_id:
+                    report_found = True
+                    desired_report_tuple = reports[key]
+            if not report_found:
+                print("Error: report not found")
+                return None, 404
+        start_date = flask.request.args.get('start_date', datetime.datetime.min)
+        end_date = flask.request.args.get('end_date', datetime.datetime.max)
+        individual_report = desired_report_tuple[1](start_date, end_date)
+        return flask.jsonify(individual_report.get_report_contents())
+            
 
     # ***
     # *  REST commands for an admin
@@ -458,6 +474,13 @@ class DelectableREST():
         if key == customer.get_phone_number():
             return True
         return False
+
+    def string_to_date(self, datestring):
+        parsed_year = int(datestring[0:4])
+        parsed_month = int(datestring[4:6])
+        parsed_day = int(datestring[6:8])
+        parsed_date = datetime.datetime(year = parsed_year, month = parsed_month, day = parsed_day)
+        return parsed_date
 
 
 if __name__ == "__main__":

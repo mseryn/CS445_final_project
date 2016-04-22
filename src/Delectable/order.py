@@ -100,10 +100,10 @@ class Order():
 
     def set_delivery_status(self, new_status):
         if (new_status.lower() == "open") or (new_status.lower() == 'delivered')
-        or (new_status.lower() == "canceled"):
+        or (new_status.lower() == "cancelled"):
             self._delivery_status = new_status.lower()
         else:
-            print("\nError: delivery status must be set to either 'open', 'delivered', or 'canceled'.  Status unchanged.")
+            print("\nError: delivery status must be set to either 'open', 'delivered', or 'cancelled'.  Status unchanged.")
 
     def get_order_date(self):
         return self._order_date
@@ -174,3 +174,37 @@ class Order():
 
     def set_instructions(self, new_instructions):
         self._instructions = new_instructions
+
+    def get_order_details_in_dict(self):
+        """
+        Returns a dict containing the following information concerning an order:
+            id, surcharge, status, order_date, delivery_date, delivery_address,
+            note, ordered_by, and order_detail
+        ordered_by is a dict containing the following information concerning a
+        customer:
+            name, email, and phone
+        order_detail is a dict containing the following information concerning
+        items in an order:
+            id (item), name, count (number of servings ordered)
+        """
+        order_item['id'] = self._order_id
+        order.item['amount'] = self._total_item_cost
+        order_item['surcharge'] = self.get_surcharge_considering_day()
+        order_item['status'] = self._delivery_status
+        order_item['order_date'] = self._order_date.strftime("%Y%m%d")
+        order_item['delivery_date'] = self._delivery_date.strftime("%Y%m%d")
+        order_customer = self._customer
+        order_item['ordered_by'] = {"name": (self._customer.get_first_name() 
+                                            + self._customer.get_last_name()),
+                                    "email": self._customer.get_email(),
+                                    "phone": self._customer.get_phone_number() }
+        order_item['delivery_address'] = self._delivery_address
+        order_item['note'] = self._instructions
+        items = self._items
+        order_item['order_detail'] = []
+        for item in items:
+            order_item['order_detail'].append({"id": item.get_item_id(),
+                                               "name": item.get_name(),
+                                               "count": item.get_serving_size() })
+        return order_item
+
