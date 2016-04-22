@@ -19,13 +19,8 @@ class Customer():
         self._first_name = str(first_name)
         self._email = str(email)
         self._phone_number = 5555555555
-        if type(phone_number) is int:
-            if phone_number > 999999999 and phone_number < 10000000000:
-                # This means it's a 10-digit number
-                self._phone_number = phone_number
-        else:
-            print("\nError: phone number must be 9-digit integer value.  Setting to 5555555555.")
-        
+        self._phone_number = phone_number
+
         self._customer_id = -1
         for customer in Customer._all_customers:
             if self == customer:
@@ -64,12 +59,7 @@ class Customer():
         return self._phone_number
 
     def set_phone_number(self, new_phone_number):
-        if type(new_phone_number) is int:
-            if new_phone_number > 999999999 and new_phone_number < 10000000000:
-                # This means it's a 10-digit number
-                self._new_phone_number = new_phone_number
-        else:
-            print("\nError: phone number must be 9-digit integer value.  No change made.")
+        self._new_phone_number = new_phone_number
 
     def __eq__(self, other_customer):
         if (self._last_name == other_customer.get_last_name())
