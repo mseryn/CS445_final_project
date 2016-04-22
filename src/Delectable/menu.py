@@ -34,6 +34,7 @@ class Menu():
         for individual_item in self._items:
             if individual_item.get_item_id() == item_id:
                 return individual_item
+        return None
 
     def get_items_filter(self, desired_categories):
         """
