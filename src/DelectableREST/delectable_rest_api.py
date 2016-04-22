@@ -57,6 +57,7 @@ class DelectableREST():
 
     def run(self):
         self.app.run(debug = True)
+
     # ***
     # *  REST commands for Menu
     # ***
@@ -71,14 +72,18 @@ class DelectableREST():
             menu_item['name'] = individual_item.get_name()
             menu_item['price_per_person'] = individual_item.get_price_per_person()
             menu_item['minimum_order'] = individual_item.get_min_serving()
-            menu_item['categories'] = [{'name' : category} for category in individual_item.get_category()]
+            menu_item['categories'] = [{'name' : category} 
+                    for category in individual_item.get_category()]
             all_menu_dicts.append(menu_item)
             menu_item = {}
-        return flask.jsonify(all_menu_dicts)
+        return flask.jsonify(all_menu_dicts) , 200
 
     def get_menu_item_json_dict(self, menu_id):
         menu_item = {}
         individual_item = self._menu.get_item_by_id(menu_id)
+        if not individual_item:
+            print("Error: menu item not found")
+            return None, 404
 
         menu_item['id'] = individual_item.get_item_id()
         menu_item['name'] = individual_item.get_name()
@@ -87,7 +92,7 @@ class DelectableREST():
         menu_item['categories'] = [{'name' : category} for category in individual_item.get_category()]
         menu_item['create_date'] = date_to_string(individual_item.get_creation_date())
         menu_item['last_modified_date'] = date_to_string(individual_item.get_last_modified_date())
-        return flask.jsonify(menu_item)
+        return flask.jsonify(menu_item) , 200
 
     # ***
     # *  REST commands for Order
