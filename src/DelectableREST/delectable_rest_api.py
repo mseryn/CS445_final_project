@@ -12,8 +12,6 @@
 #   github username: mseryn
 ###
 
-# Somehow import packages Delectable and DelectableReport
-
 import Delectable
 
 import flask
@@ -276,9 +274,11 @@ class DelectableREST():
         customer_item ={}
         order_item = {}
         customer_orders = []
+        customer_found = False
 
         for individual_customer in customers:
             if individual_customer.get_customer_id() == customer_id:
+                customer_found = True
                 customer_item['id'] = individual_customer.get_customer_id()
                 customer_item['name'] = individual_customer.get_first_name() + 
                                         individual_customer.get_last_name()
@@ -297,7 +297,11 @@ class DelectableREST():
                         customer_orders.append(order_item)
                         order_item = {}
                 customer_item['orders'] = customer_orders
-        return flask.jsonify(customer_item)
+        if customer_found:
+            return flask.jsonify(customer_item) , 200
+        else:
+            print("Error: customer not found")
+            return None, 404
 
     # ***
     # *  REST commands for Report
@@ -313,7 +317,7 @@ class DelectableREST():
             report_dict['name'] = reports[key][0]
             reports_list.append(report_dict)
             report_dict = {}
-        return flask.jsonify(reports_list)
+        return flask.jsonify(reports_list) , 200
 
     def get_report_in_range_json_dict(self, report_id) ????
 
@@ -330,6 +334,7 @@ class DelectableREST():
         or not 'categories' in flask.request.json:
             # Also check for all components of categories? Not sure how.
             print("Error: not all components for item PUT are present.  Aborting.")
+            return None, 400
         else:
             parsed_name = flask.request.json['name']
             parsed_price_per_person = float(flask.request.json['price_per_person'])
@@ -342,7 +347,7 @@ class DelectableREST():
                     min_serving = parsed_minimum_serving, category = parsed_categories)
             self._menu.add_item(item)
 
-            return flask.jsonify({'id': item.get_item_id()})
+            return flask.jsonify({'id': item.get_item_id()}) , 201
 
     def post_item_price_json_dict(self):
         if not flask.request.json
@@ -378,9 +383,11 @@ class DelectableREST():
         orders = order.get_all_orders()
         
         if not order_id:
+            print("Error: missing arguments")
             return None, 204
         else:
             if not type(order_id) is int:
+                print("Error: order id must be an integer value")
                 return None, 404
             else:
                 for individual_order in orders:
