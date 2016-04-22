@@ -51,7 +51,25 @@ class DelectableREST():
         self.app.add_url_rule('/delectable/customer/<int:customer_id>', 
                 'get_customer_by_id_json_dict', self.get_customer_by_id_json_dict, 
                 methods = ['GET'])
+        # Report calls:
+        self.app.add_url_rule('/delectable/report', 'get_report_json_dict', 
+                self.get_report_json_dict, methods = ['GET'])
+        self.app.add_url_rule('/delectable/report/<int=report_id>', 
+                'get_report_in_range_json_dict', self.get_report_in_range_json_dict, 
+                methods = ['GET'])
         # admin calls:
+        self.app.add_url_rule('delectable/admin/menu', 'put_item_on_menu_json_dict',
+                self.put_item_on_menu_json_dict, methods = ['PUT'])
+        self.app.add_url_rule('/delectable/admin/menu/<int=menu_id>', 
+                'post_item_price_json_dict', self.post_item_price_json_dict,
+                methods = ['POST'])
+        self.app.add_url_rule('/delectable/admin/surcharge', 'get_menu_surcharge_json_dict',
+                self.get_menu_surcharge_json_dict, methods = ['GET'])
+        self.app.add_url_rule('/delectable/admin/surcharge', 'post_menu_surcharge_json_dict',
+                self.post_menu_surcharge_json_dict, methods = ['POST'])
+        self.app.add_url_rule('delectable/admin/delivery/<int=order_id>',
+                'post_order_delivered_json_dict', self.post_order_delivered_json_dict,
+                methods = ['POST'])
         
 
 
