@@ -20,18 +20,19 @@ class Deliveries(report.Report):
         if (type(start_date) == datetime) and (type(end_date) == datetime):
             self._start_date = start_date
             self._end_date = end_date
-        self._number_delivered = 0
 
-        self._orders_for_dates = []
-        orders = order.Order.get_all_orders()
+        # Getting all orders in the date range
+        self._all_orders = [individual_order for individual_order in order.Order.get_all_orders()
+                  if (individual_order.get_delivery_date().date() <= end_date.date()) 
+                      and (individual_order.get_delivery_date().date() >= start_date.date())]
 
-        for individual_order in orders:
-            if individual_order.get_status() == "delivered":
-                if (individual_order.get_delivery_date().date() <= end_date.date()) and (individual_order.get_delivery_date().date() >= start_date.date()):
-                    self._orders_for_dates.append(individual_order)
-                    self._number_delivered += 1
+
 
     def get_report_contents(self):
-        return self._number_delivered
+        delivered_orders = []
+        for individual_order in self._all_orders:
+            if individual_order.get_delivery_status() == "delivered":
+                delivered_orders.append(individual_order)
+        return delivered_orders
 
 report.Report._reports[804] = ("Orders delivery report", Deliveries)

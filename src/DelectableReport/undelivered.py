@@ -16,9 +16,9 @@ import Delectable.order
 import datetime
 
 class Undelivered(report.Report):
-    def __init__(self, date):
-        if type(date) == datetime:
-            _self.start_date = date
+    def __init__(self, start_date, end_date):
+        if type(start_date) == datetime:
+            _self.start_date = start_date
 
     def get_report_contents(self):
         orders_for_date = []
@@ -26,5 +26,6 @@ class Undelivered(report.Report):
         for individual_order in orders:
             if individual_order.get_status() == "open":
                 if individual_order.get_delivery_date().date() == self._start_date.date():
-                    orders_for_date.append(individual_order)
-        return orders_for_date
+                    orders_for_date.append(individual_order.get_order_details_in_dict())
+        
+        return {'orders': orders_for_date}
