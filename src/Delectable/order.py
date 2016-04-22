@@ -96,6 +96,9 @@ class Order():
     def get_customer_id(self):
         return self._customer.get_customer_id()
 
+    def get_customer(self):
+        return self._customer
+
     def get_delivery_status(self):
         return self._delivery_status
 

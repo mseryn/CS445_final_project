@@ -16,7 +16,7 @@ class Item():
     _item_id_counter = 0
 
     def __init__(self, name = "default item", price = 0.0, min_serving = 1, category = []):
-        self._create_date = datetime.datetime.now()
+        self._creation_date = datetime.datetime.now()
         self._last_modified_date = datetime.datetime.now()
 
         self._item_id =self. _item_id_counter
