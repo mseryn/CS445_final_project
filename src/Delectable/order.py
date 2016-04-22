@@ -23,7 +23,8 @@ class Order():
     _all_customers = []
     _order_id_counter = 0
 
-    def __init__(self, initialized_customer, initialized_billing_address, 
+    def __init__(self, initialized_customer, 
+            initialized_billing_address, 
             initialized_delivery_address, 
             order_date = datetime.today(), 
             delivery_date = (datetime.today() + timedelta(1)), 

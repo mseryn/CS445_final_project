@@ -117,7 +117,7 @@ class DelectableREST():
     def get_orders_json_dict(self):
         order_item = {}
         all_order_dicts = []
-        order = Delectable.order.Order() 
+        order = Delectable.order.Order 
         orders = order.get_all_orders()
 
         for individual_order in orders:
@@ -136,7 +136,7 @@ class DelectableREST():
     def get_orders_by_day_json_dict(self, datestring):
         orders_for_date = []
         order_item = {}
-        order = Delectable.order.Order() 
+        order = Delectable.order.Order 
         orders = order.get_all_orders()
 
         parsed_year = int(datestring[0:4])
@@ -212,7 +212,7 @@ class DelectableREST():
 
     def get_order_by_id_json_dict(self, order_id):
         order_item = {}
-        order = Delectable.order.Order() 
+        order = Delectable.order.Order 
         orders = order.get_all_orders()
         order_found = False
 
@@ -245,7 +245,7 @@ class DelectableREST():
             return None, 404
     
     def post_order_cancel_json_dict(self, order_id):
-        order = Delectable.order.Order() 
+        order = Delectable.order.Order 
         orders = order.get_all_orders()
         order_found = False
         for individual_order in orders:
@@ -297,8 +297,8 @@ class DelectableREST():
         return flask.jsonify(customer_dict_list) , 200
 
     def get_customer_by_id_json_dict(self, customer_id):
-        customer = Delectable.customer.Customer()
-        order = Delectable.order.Order()
+        customer = Delectable.customer.Customer
+        order = Delectable.order.Order
         customers = customer.get_all_customers()
         orders = order.get_all_orders()
         customer_item ={}
@@ -376,7 +376,7 @@ class DelectableREST():
     # *  REST commands for an admin
     # ***
 
-    def put_item_on_menu_json_dict():
+    def put_item_on_menu_json_dict(self):
         # Ensuring all necessary fields are filled:
         if (not flask.request.json 
         or not 'name' in flask.request.json
@@ -430,7 +430,7 @@ class DelectableREST():
             return
 
     def post_order_delivered_json_dict(self, order_id):
-        order = Delectable.order.Order()
+        order = Delectable.order.Order
         orders = order.get_all_orders()
         
         if not order_id:
