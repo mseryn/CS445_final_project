@@ -110,7 +110,7 @@ class DelectableREST():
 
             all_order_dicts.append(order_item)
             order_item = {}
-        return flask.jsonify(all_order_dicts)
+        return flask.jsonify(all_order_dicts) , 200
 
     def get_order_by_day_json_dict(self, datestring):
         orders_for_date = []
@@ -137,7 +137,7 @@ class DelectableREST():
                 order_item['status'] = individual_order.get_status()
                 order_item['ordered_by'] = individual_order.get_customer().get_email()
                 orders_for_date.append(order_item)
-        return flask.jsonify(orders_for_date)
+        return flask.jsonify(orders_for_date) , 200
 
     def put_order_json_dict(self):
 
@@ -191,15 +191,17 @@ class DelectableREST():
             # returning formatted dict with cancelation URL
             order_cancel_url = "/order/cancel/" + str(order.get_order_id())
             return flask.jsonify({'id': order.get_order_id, 
-                                  'cancel_url' = order_cancel_url})
+                                  'cancel_url' = order_cancel_url}) , 201
 
     def get_order_by_id_json_dict(self, order_id):
         order_item = {}
         order = Delectable.order.Order() 
         orders = order.get_all_orders()
+        order_found = False
 
         for individual_order in orders:
             if individual_order.get_order_id() == order_id:
+                order_found = True
                 order_item['id'] = individual_order.get_order_id()
                 order_item['amount'] = individual_order.get_total_cost()
                 order_item['surcharge'] = individual_order.get_surcharge_considering_day()
@@ -218,15 +220,25 @@ class DelectableREST():
                     order_item['order_detail'].append({"id": item.get_item_id(),
                                                        "name": item.get_name(),
                                                        "count": item.get_serving_size() })
-        return flask.jsonify(order_item)
+        if order_found:
+            return flask.jsonify(order_item) , 200
+        else:
+            print("Error: order not found")
+            return None, 404
     
     def post_order_cancel_json_dict(self, order_id):
         order = Delectable.order.Order() 
         orders = order.get_all_orders()
+        order_found = False
         for individual_order in orders:
             if individual_order.get_order_id() == order_id:
+                order_found = True
                 individual_order.set_delivery_status(order_id, "canceled")
-        return flask.jsonify({'id': order_id})
+        if order_found:
+            return
+        else:
+            print("Error: order not found")
+            return None, 202
 
 
     # ***
@@ -247,7 +259,7 @@ class DelectableREST():
             customer_item['phone'] = individual_customer.get_phone_number()
             customer_dict_list.append(customer_item)
             customer_item ={}
-        return flask.jsonify(customer_dict_list)
+        return flask.jsonify(customer_dict_list) , 200
 
     def get_customer_by_key_json_dict(self, query):
         customer = Delectable.customer.Customer()
@@ -264,7 +276,7 @@ class DelectableREST():
                 customer_item['phone'] = individual_customer.get_phone_number()
                 customer_dict_list.append(customer_item)
                 customer_item ={}
-        return flask.jsonify(customer_dict_list)
+        return flask.jsonify(customer_dict_list) , 200
 
     def get_customer_by_id_json_dict(self, customer_id):
         customer = Delectable.customer.Customer()
