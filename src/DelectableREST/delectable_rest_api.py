@@ -162,7 +162,7 @@ class DelectableREST():
 
     def put_order_json_dict(self):
         # Ensuring all necessary fields are filled:
-        if not flask.request.json 
+        if (not flask.request.json 
         or not 'delivery_date' in flask.request.json
         or not 'delivery_address' in flask.request.json 
         or not 'personal_info' in flask.request.json
@@ -170,12 +170,12 @@ class DelectableREST():
         or not 'order_detail' in flask.request.json
         or not 'name' in flask.request.json['personal_info']
         or not 'email' in flask.request.json['personal_info']
-        or not 'phone' in flask.request.json['personal_info']:
+        or not 'phone' in flask.request.json['personal_info']):
             # Also check for all components of orders? Not sure how.
             print("Error: not all components for order present.  Aborting.")
         else:
             # getting the date:
-            parsed_date = string_to_date(flask.request.json['delivery_date']
+            parsed_date = string_to_date(flask.request.json['delivery_date'])
 
             # getting address
             address_string = flask.request.json['delivery_address']
@@ -207,8 +207,8 @@ class DelectableREST():
 
             # returning formatted dict with cancelation URL
             order_cancel_url = "/order/cancel/" + str(order.get_order_id())
-            return flask.jsonify({'id': order.get_order_id, 
-                                  'cancel_url' = order_cancel_url}) , 201
+            return flask.jsonify({'id'         : order.get_order_id, 
+                                  'cancel_url' : order_cancel_url}) , 201
 
     def get_order_by_id_json_dict(self, order_id):
         order_item = {}
@@ -271,8 +271,8 @@ class DelectableREST():
 
         for individual_customer in customers:
             customer_item['id'] = individual_customer.get_customer_id()
-            customer_item['name'] = individual_customer.get_first_name() + 
-                                    individual_customer.get_last_name()
+            customer_item['name'] = (individual_customer.get_first_name() + 
+                                    individual_customer.get_last_name())
             customer_item['email'] = individual_customer.get_email()
             customer_item['phone'] = individual_customer.get_phone_number()
             customer_dict_list.append(customer_item)
@@ -288,8 +288,8 @@ class DelectableREST():
         for individual_customer in customers:
             if customer_key_match(individual_customer, query):
                 customer_item['id'] = individual_customer.get_customer_id()
-                customer_item['name'] = individual_customer.get_first_name() + 
-                                        individual_customer.get_last_name()
+                customer_item['name'] = (individual_customer.get_first_name() + 
+                                        individual_customer.get_last_name())
                 customer_item['email'] = individual_customer.get_email()
                 customer_item['phone'] = individual_customer.get_phone_number()
                 customer_dict_list.append(customer_item)
@@ -310,16 +310,16 @@ class DelectableREST():
             if individual_customer.get_customer_id() == customer_id:
                 customer_found = True
                 customer_item['id'] = individual_customer.get_customer_id()
-                customer_item['name'] = individual_customer.get_first_name() + 
-                                        individual_customer.get_last_name()
+                customer_item['name'] = (individual_customer.get_first_name() + 
+                                        individual_customer.get_last_name())
                 customer_item['email'] = individual_customer.get_email()
                 customer_item['phone'] = individual_customer.get_phone_number()
                 for individual_order in orders:
                     if individual_order.get_customer_id() == customer_item["id"]:
                         order_item["id"] = individual_order.get_order_id()
-                        order_item["order_date"] = 
+                        order_item["order_date"] = \
                             individual_order.get_order_date().strftime("%Y%m%d")
-                        order_item["delivery_date"] = 
+                        order_item["delivery_date"] = \
                             individual_order.get_delivery_date().strftime("%Y%m%d")
                         order_item["amount"] = individual_order.get_total_item_cost()
                         order_item["surcharge"] = individual_order.get_surcharge_considering_day()
@@ -350,7 +350,7 @@ class DelectableREST():
         return flask.jsonify(reports_list) , 200
 
     def get_report_in_range_json_dict(self, report_id):
-        if not flask.request.json
+        if not flask.request.json:
             # Not an expressly specified return - okay? QUESTION
             print("Error: report id required")
             return None, 400
@@ -378,11 +378,11 @@ class DelectableREST():
 
     def put_item_on_menu_json_dict():
         # Ensuring all necessary fields are filled:
-        if not flask.request.json 
+        if (not flask.request.json 
         or not 'name' in flask.request.json
         or not 'price_per_person' in flask.request.json
         or not 'minimum_order' in flask.request.json
-        or not 'categories' in flask.request.json:
+        or not 'categories' in flask.request.json):
             # Also check for all components of categories? Not sure how.
             print("Error: not all components for item PUT are present.  Aborting.")
             return None, 400
@@ -401,9 +401,9 @@ class DelectableREST():
             return flask.jsonify({'id': item.get_item_id()}) , 201
 
     def post_item_price_json_dict(self):
-        if not flask.request.json
+        if (not flask.request.json
         or not 'id' in flask.request.json
-        or not 'price_per_person' in flask.request.json:
+        or not 'price_per_person' in flask.request.json):
             print("Error: not all components for item price change are present.  Aborting.")
             return None, 400
         else:
