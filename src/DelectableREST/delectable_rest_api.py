@@ -106,8 +106,8 @@ class DelectableREST():
         menu_item['price_per_person'] = individual_item.get_price_per_person()
         menu_item['minimum_order'] = individual_item.get_min_serving()
         menu_item['categories'] = [{'name' : category} for category in individual_item.get_category()]
-        menu_item['create_date'] = date_to_string(individual_item.get_creation_date())
-        menu_item['last_modified_date'] = date_to_string(individual_item.get_last_modified_date())
+        menu_item['create_date'] = individual_item.get_creation_date().strftime("%Y%m%d")
+        menu_item['last_modified_date'] = individual_item.get_last_modified_date().strftime("Y%m%d")
         return flask.jsonify(menu_item) , 200
 
     # ***
@@ -122,8 +122,8 @@ class DelectableREST():
 
         for individual_order in orders:
             order_item['id'] = individual_order.get_order_id()
-            order_item['order_date'] = date_to_string(individual_order.get_order_date())
-            order_item['delivery_date'] = date_to_string(individual_order.get_delivery_date())
+            order_item['order_date'] = individual_order.get_order_date().strftime("%Y%m%d")
+            order_item['delivery_date'] = individual_order.get_delivery_date().strftime("%Y%m%d")
             order_item['amount'] = individual_order.get_total_cost()
             order_item['surcharge'] = individual_order.get_surcharge_considering_day()
             order_item['status'] = individual_order.get_status()
@@ -151,8 +151,8 @@ class DelectableREST():
         for individual_order in orders:
             if individual_order.get_delivery_date().date() == parsed_date.date():
                 order_item['id'] = individual_order.get_order_id()
-                order_item['order_date'] = date_to_string(individual_order.get_order_date())
-                order_item['delivery_date'] = date_to_string(individual_order.get_delivery_date())
+                order_item['order_date'] = individual_order.get_order_date().strftime("%Y%m%d")
+                order_item['delivery_date'] = individual_order.get_delivery_date().strftime("%Y%m%d")
                 order_item['amount'] = individual_order.get_total_cost()
                 order_item['surcharge'] = individual_order.get_surcharge_considering_day()
                 order_item['status'] = individual_order.get_status()
@@ -223,8 +223,8 @@ class DelectableREST():
                 order_item['amount'] = individual_order.get_total_cost()
                 order_item['surcharge'] = individual_order.get_surcharge_considering_day()
                 order_item['status'] = individual_order.get_status()
-                order_item['order_date'] = date_to_string(individual_order.get_order_date())
-                order_item['delivery_date'] = date_to_string(individual_order.get_delivery_date())
+                order_item['order_date'] = individual_order.get_order_date().strftime("%Y%m%d")
+                order_item['delivery_date'] = individual_order.get_delivery_date().strftime("%Y%m%d")
                 order_customer = individual_order.get_customer()
                 order_item['ordered_by'] = {"name": (order_customer.get_first_name() 
                                                     + order_customer.get_last_name()),
@@ -318,9 +318,9 @@ class DelectableREST():
                     if individual_order.get_customer_id() == customer_item["id"]:
                         order_item["id"] = individual_order.get_order_id()
                         order_item["order_date"] = 
-                            date_to_string(individual_order.get_order_date())
+                            individual_order.get_order_date().strftime("%Y%m%d")
                         order_item["delivery_date"] = 
-                            date_to_string(individual_order.get_delivery_date())
+                            individual_order.get_delivery_date().strftime("%Y%m%d")
                         order_item["amount"] = individual_order.get_total_item_cost()
                         order_item["surcharge"] = individual_order.get_surcharge_considering_day()
                         order_item["status"] = individual_order.get_status()
@@ -450,17 +450,6 @@ class DelectableREST():
     # ***
     # *  Helper Routines for JSON Class
     # ***
-
-    def date_to_string(self, date_input):
-        if type(date_input) is datetime.datetime:
-            year = str(date_input.date().year)
-            month = str(date_input.date().month)
-            day = str(date_input.date().day)
-            if len(month) < 2:
-                month = "0" + month
-            if len(day) < 2:
-                day = "0" + day
-            return year + month + day
 
     def customer_key_match(self, customer, key_raw):
         key = str(key_raw)
