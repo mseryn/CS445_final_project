@@ -20,7 +20,7 @@ class Item():
         self._last_modified_date = datetime.datetime.now()
 
         self._item_id =self. _item_id_counter
-        self._item_id_counter += 1
+        Item._item_id_counter += 1
 
         self._name = name
         self._category = category
