@@ -35,7 +35,7 @@ class Order():
 
         # Dealing with order ID
         self._order_id = self._order_id_counter
-        self._order_id_counter += 1
+        Order._order_id_counter += 1
 
         self._delivery_status = "open"
 

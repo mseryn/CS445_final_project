@@ -27,7 +27,7 @@ class Customer():
                 self._customer_id = customer.get_id()
         if self._customer_id == -1:
             self._customer_id = self._customer_id_counter
-            self._customer_id_counter += 1
+            Customer._customer_id_counter += 1
             self._all_customers.append(self)
 
     @staticmethod
