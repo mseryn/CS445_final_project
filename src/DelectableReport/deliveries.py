@@ -26,13 +26,16 @@ class Deliveries(report.Report):
                   if (individual_order.get_delivery_date().date() <= end_date.date()) 
                       and (individual_order.get_delivery_date().date() >= start_date.date())]
 
-
-
     def get_report_contents(self):
+        delivered_dict = {}
         delivered_orders = []
         for individual_order in self._all_orders:
             if individual_order.get_delivery_status() == "delivered":
-                delivered_orders.append(individual_order)
-        return delivered_orders
+                delivered_orders.append(individual_order.get_order_details_in_dict())
+
+        delivered_dict['id'] = 804 
+        delivered_dict['name'] = "Orders delivery report"
+        delivered_dict['orders'] = delivered_orders
+        return delivered_dict
 
 report.Report._reports[804] = ("Orders delivery report", Deliveries)
