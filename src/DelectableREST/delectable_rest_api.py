@@ -31,7 +31,7 @@ class DelectableREST():
         # Order calls:
         self.app.add_url_rule('/delectable/order', 'get_orders_json_dict', 
                 self.get_orders_json_dict, methods = ['GET'])
-        self.app.add_url_rule('/delectable/order?date=<str:datestring>', 
+        self.app.add_url_rule('/delectable/order?date=<string:datestring>', 
                 'get_orders_by_day_json_dict', self.get_orders_by_day_json_dict, 
                 methods = ['GET'])
         self.app.add_url_rule('/delectable/order', 'put_order_json_dict', 
@@ -45,7 +45,7 @@ class DelectableREST():
         # Customer calls:
         self.app.add_url_rule('/delectable/customer', 'get_customers_json_dict', 
                 self.get_customers_json_dict, methods = ['GET'])
-        self.app.add_url_rule('/delectable/customer?key=<str:query>', 
+        self.app.add_url_rule('/delectable/customer?key=<string:query>', 
                 'get_customer_by_key_json_dict', self.get_customer_by_key_json_dict, 
                 methods = ['GET'])
         self.app.add_url_rule('/delectable/customer/<int:customer_id>', 
@@ -54,20 +54,20 @@ class DelectableREST():
         # Report calls:
         self.app.add_url_rule('/delectable/report', 'get_report_json_dict', 
                 self.get_report_json_dict, methods = ['GET'])
-        self.app.add_url_rule('/delectable/report/<int=report_id>', 
+        self.app.add_url_rule('/delectable/report/<int:report_id>', 
                 'get_report_in_range_json_dict', self.get_report_in_range_json_dict, 
                 methods = ['GET'])
         # admin calls:
-        self.app.add_url_rule('delectable/admin/menu', 'put_item_on_menu_json_dict',
+        self.app.add_url_rule('/delectable/admin/menu', 'put_item_on_menu_json_dict',
                 self.put_item_on_menu_json_dict, methods = ['PUT'])
-        self.app.add_url_rule('/delectable/admin/menu/<int=menu_id>', 
+        self.app.add_url_rule('/delectable/admin/menu/<int:menu_id>', 
                 'post_item_price_json_dict', self.post_item_price_json_dict,
                 methods = ['POST'])
         self.app.add_url_rule('/delectable/admin/surcharge', 'get_menu_surcharge_json_dict',
                 self.get_menu_surcharge_json_dict, methods = ['GET'])
         self.app.add_url_rule('/delectable/admin/surcharge', 'post_menu_surcharge_json_dict',
                 self.post_menu_surcharge_json_dict, methods = ['POST'])
-        self.app.add_url_rule('delectable/admin/delivery/<int=order_id>',
+        self.app.add_url_rule('/delectable/admin/delivery/<int:order_id>',
                 'post_order_delivered_json_dict', self.post_order_delivered_json_dict,
                 methods = ['POST'])
         
@@ -133,7 +133,7 @@ class DelectableREST():
             order_item = {}
         return flask.jsonify(all_order_dicts) , 200
 
-    def get_order_by_day_json_dict(self, datestring):
+    def get_orders_by_day_json_dict(self, datestring):
         orders_for_date = []
         order_item = {}
         order = Delectable.order.Order() 

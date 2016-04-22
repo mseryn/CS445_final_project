@@ -62,10 +62,10 @@ class Customer():
         self._new_phone_number = new_phone_number
 
     def __eq__(self, other_customer):
-        if (self._last_name == other_customer.get_last_name())
+        if ((self._last_name == other_customer.get_last_name())
         and (self._first_name == other_customer.get_last_name())
         and (self._email == other_customer.get_email())
-        and (self._phone_number == other_customer.get_phone_number()):
+        and (self._phone_number == other_customer.get_phone_number())):
             return True
         else:
             return False

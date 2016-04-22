@@ -99,8 +99,9 @@ class Order():
         return self._delivery_status
 
     def set_delivery_status(self, new_status):
-        if (new_status.lower() == "open") or (new_status.lower() == 'delivered')
-        or (new_status.lower() == "cancelled"):
+        if ((new_status.lower() == "open") 
+        or (new_status.lower() == 'delivered')
+        or (new_status.lower() == "cancelled")):
             self._delivery_status = new_status.lower()
         else:
             print("\nError: delivery status must be set to either 'open', 'delivered', or 'cancelled'.  Status unchanged.")
