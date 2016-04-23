@@ -20,7 +20,6 @@ from datetime import *
 class Order():
 
     _all_orders = []
-    _all_customers = []
     _order_id_counter = 0
 
     def __init__(self, initialized_customer, 
@@ -43,7 +42,7 @@ class Order():
 
         # Type-confirming customer
         if isinstance(initialized_customer, customer.Customer):
-            self._customer = initialized_customer
+            self._customer = initialized_customer.get_customer_id()
 
         # Type-confirming dates
         if type(order_date) is datetime:
@@ -76,8 +75,7 @@ class Order():
         self._surcharge = menu.Menu().get_surcharge()
         self._instructions = instructions
 
-        self._all_customers.append(self._customer)
-        self._all_orders.append(self)
+        Order._all_orders.append(self)
 
     @staticmethod
     def get_all_orders():
@@ -91,16 +89,16 @@ class Order():
 
     @staticmethod
     def get_all_customers():
-        return Order._all_customers
+        return customer.Customer.get_all_customers()
 
     def get_order_id(self):
         return self._order_id
 
     def get_customer_id(self):
-        return self._customer.get_customer_id()
+        return self._customer
 
     def get_customer(self):
-        return self._customer
+        return customer.Customer.get_customer_by_id(self._customer)
 
     def get_delivery_status(self):
         return self._delivery_status
@@ -208,10 +206,11 @@ class Order():
         order_item['status'] = self._delivery_status
         order_item['order_date'] = self._order_date.strftime("%Y%m%d")
         order_item['delivery_date'] = self._delivery_date.strftime("%Y%m%d")
-        name_string = self._customer.get_first_name() + " " + self._customer.get_last_name()
+        order_customer = customer.Customer.get_customer_by_id(self._customer)
+        name_string = order_customer.get_first_name() + " " + order_customer.get_last_name()
         order_item['ordered_by'] = {"name" : name_string,
-                                    "email": self._customer.get_email(),
-                                    "phone": self._customer.get_phone_number(), 
+                                    "email": order_customer.get_email(),
+                                    "phone": order_customer.get_phone_number(), 
                                     }
         order_item['delivery_address'] = self._delivery_address
         order_item['note'] = self._instructions

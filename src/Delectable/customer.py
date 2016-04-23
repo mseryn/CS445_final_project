@@ -24,15 +24,21 @@ class Customer():
         self._customer_id = -1
         for customer in Customer._all_customers:
             if self == customer:
-                self._customer_id = customer.get_id()
+                self._customer_id = customer._customer_id
         if self._customer_id == -1:
             self._customer_id = self._customer_id_counter
             Customer._customer_id_counter += 1
-            self._all_customers.append(self)
+            Customer._all_customers.append(self)
 
     @staticmethod
     def get_all_customers():
         return Customer._all_customers
+
+    @staticmethod
+    def get_customer_by_id(customer_id):
+        for individual_customer in Customer._all_customers:
+            if individual_customer.get_customer_id() == customer_id:
+                return individual_customer
 
     def get_customer_id(self):
         return self._customer_id
@@ -63,7 +69,7 @@ class Customer():
 
     def __eq__(self, other_customer):
         if ((self._last_name == other_customer.get_last_name())
-        and (self._first_name == other_customer.get_last_name())
+        and (self._first_name == other_customer.get_first_name())
         and (self._email == other_customer.get_email())
         and (self._phone_number == other_customer.get_phone_number())):
             return True

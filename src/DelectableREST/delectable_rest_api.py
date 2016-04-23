@@ -47,9 +47,6 @@ class DelectableREST():
         # Customer calls:
         self.app.add_url_rule('/delectable/customer', 'get_customers_json_dict', 
                 self.get_customers_json_dict, methods = ['GET'])
-        self.app.add_url_rule('/delectable/customer?key=<string:query>', 
-                'get_customer_by_key_json_dict', self.get_customer_by_key_json_dict, 
-                methods = ['GET'])
         self.app.add_url_rule('/delectable/customer/<int:customer_id>', 
                 'get_customer_by_id_json_dict', self.get_customer_by_id_json_dict, 
                 methods = ['GET'])
@@ -236,19 +233,12 @@ class DelectableREST():
         customers = customer.get_all_customers()
         customer_dict_list = []
 
+        if "key" in flask.request.args:
+            customers = [icustomer for icustomer in customers
+                         if self.customer_key_match(icustomer, flask.request.args["key"])]
+
         for individual_customer in customers:
             customer_dict_list.append(individual_customer.get_customer_details_dict())
-        return json.dumps(customer_dict_list) , 200, self._response_header
-
-    def get_customer_by_key_json_dict(self, query):
-        customer = Delectable.customer.Customer()
-        customers = customer.get_all_customers()
-        customer_item ={}
-        customer_dict_list = []
-
-        for individual_customer in customers:
-            if customer_key_match(individual_customer, query):
-                customer_dict_list.append(individual_customer.get_customer_details_dict())
         return json.dumps(customer_dict_list) , 200, self._response_header
 
     def get_customer_by_id_json_dict(self, customer_id):
@@ -267,27 +257,18 @@ class DelectableREST():
                 for individual_order in orders:
                     if individual_order.get_customer_id() == customer_item["id"]:
                         order_item = individual_order.get_order_details_in_dict()
-                        del order_item['order_detail']
+                        del order_item['ordered_by']
                         del order_item['note']
                         del order_item['delivery_address']
                         del order_item['order_detail']
 
-                        order_item["id"] = individual_order.get_order_id()
-                        order_item["order_date"] = \
-                            individual_order.get_order_date().strftime("%Y%m%d")
-                        order_item["delivery_date"] = \
-                            individual_order.get_delivery_date().strftime("%Y%m%d")
-                        order_item["amount"] = individual_order.get_total_item_cost()
-                        order_item["surcharge"] = individual_order.get_surcharge_considering_day()
-                        order_item["status"] = individual_order.get_delivery_status()
                         customer_orders.append(order_item)
-                        order_item = {}
                 customer_item['orders'] = customer_orders
         if customer_found:
             return json.dumps(customer_item) , 200, self._response_header
         else:
             print("Error: customer not found")
-            return None, 404, self._response_header
+            return "", 404, self._response_header
 
     # ***
     # *  REST commands for Report
@@ -409,10 +390,7 @@ class DelectableREST():
 
     def customer_key_match(self, customer, key_raw):
         key = str(key_raw)
-        name = customer.get_first_name() + customer.get_last_name()
-        if key == name:
-            return True
-        if key == str(customer.get_customer_id()):
+        if key == customer.get_last_name():
             return True
         if key == customer.get_email():
             return True
