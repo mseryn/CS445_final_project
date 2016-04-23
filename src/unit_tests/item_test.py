@@ -29,21 +29,21 @@ def test_item_set_name():
 
 def test_item_default_price():
     test_item = item.Item()
-    assert((test_item.get_price() == 0), "default price for item not correctly set")
+    assert((test_item.get_price_per_person() == 0), "default price for item not correctly set")
 
-def test_item_set_price():
+def test_item_set_price_per_person():
     test_item = item.Item()
-    test_item.set_price(15.25)
-    assert((test_item.get_price() == 15.25), "set_price in item did not correctly set price")
+    test_item.set_price_per_person(15.25)
+    assert((test_item.get_price_per_person() == 15.25), "set_price in item did not correctly set price")
 
 def test_item_set_price_invalid():
     test_item = item.Item()
-    test_item.set_price(-15.25)
+    test_item.set_price_per_person(-15.25)
     assert((test_item.get_name() == 0), "set_price in item allowed for invalid amount")
 
 def test_item_initialized_price_invalid():
     test_item = item.Item(price = -15.25)
-    assert((test_item.get_price() == 0), "initialized price for item allowed for invalid amount")
+    assert((test_item.get_price_per_person() == 0), "initialized price for item allowed for invalid amount")
 
 # Testing minimum serving size
 
