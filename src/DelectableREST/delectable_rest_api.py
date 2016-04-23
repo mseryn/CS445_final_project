@@ -245,9 +245,9 @@ class DelectableREST():
         for individual_order in orders:
             if individual_order.get_order_id() == order_id:
                 order_found = True
-                individual_order.set_delivery_status(order_id, "cancelled")
+                individual_order.set_delivery_status("cancelled")
         if order_found:
-            return "", 204, {"Content-Type": "application/json", "Location": "/delectable/order/" + order_id}
+            return "", 204, {"Content-Type": "application/json", "Location": "/delectable/order/" + str(order_id)}
         else:
             print("Error: order not found")
             return "", 404
@@ -282,7 +282,6 @@ class DelectableREST():
         order = Delectable.order.Order
         customers = customer.get_all_customers()
         orders = order.get_all_orders()
-        customer_item ={}
         order_item = {}
         customer_orders = []
         customer_found = False
@@ -293,6 +292,12 @@ class DelectableREST():
                 customer_item = individual_customer.get_customer_details_dict()
                 for individual_order in orders:
                     if individual_order.get_customer_id() == customer_item["id"]:
+                        order_item = individual_order.get_order_details_in_dict()
+                        del order_item['order_detail']
+                        del order_item['note']
+                        del order_item['delivery_address']
+                        del order_item['order_detail']
+
                         order_item["id"] = individual_order.get_order_id()
                         order_item["order_date"] = \
                             individual_order.get_order_date().strftime("%Y%m%d")
