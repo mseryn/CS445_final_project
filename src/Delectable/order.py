@@ -72,7 +72,6 @@ class Order():
         # Setting address strings
         self._billing_address = initialized_billing_address
         self._delivery_address = initialized_delivery_address
-        self._surcharge = menu.Menu().get_surcharge()
         self._instructions = instructions
 
         Order._all_orders.append(self)
@@ -133,6 +132,8 @@ class Order():
         # weekday() applied to a datetime object returns the day of week
         # where Monday = 0 and Sunday = 6.
         # Surcharges apply only on weekends, IE when return value is 5 or 6.
+        print(self._surcharge)
+        print(self._delivery_date.weekday())
         if self._delivery_date.weekday() > 4:
             return self._surcharge
         else:

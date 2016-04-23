@@ -192,7 +192,9 @@ class DelectableREST():
             # returning formatted dict with cancelation URL
             order_cancel_url = "/order/cancel/" + str(order.get_order_id())
             return json.dumps({'id'         : order.get_order_id(), 
-                               'cancel_url' : order_cancel_url}) , 201, self._response_header
+                               'cancel_url' : order_cancel_url}) , 201,  \
+                                    {"Content-Type": "application/json", \
+                                    "Location": "/delectable/order/" + str(order.get_order_id())}
 
     def get_order_by_id_json_dict(self, order_id):
         order_item = {}
@@ -208,7 +210,7 @@ class DelectableREST():
             return json.dumps(order_item) , 200, self._response_header
         else:
             print("Error: order not found")
-            return "", 404
+            return "", 404, self._response_header
     
     def post_order_cancel_json_dict(self, order_id):
         order = Delectable.order.Order 
@@ -222,7 +224,7 @@ class DelectableREST():
             return "", 204, {"Content-Type": "application/json", "Location": "/delectable/order/" + str(order_id)}
         else:
             print("Error: order not found")
-            return "", 404
+            return "", 404, self._response_header
 
 
     # ***
@@ -318,7 +320,7 @@ class DelectableREST():
         or not 'categories' in flask.request.json):
             # Also check for all components of categories? Not sure how.
             print("Error: not all components for item PUT are present.  Aborting.")
-            return None, 400, self._response_header
+            return "", 400, self._response_header
         else:
             parsed_name = flask.request.json['name']
             parsed_price_per_person = float(flask.request.json['price_per_person'])
@@ -331,7 +333,8 @@ class DelectableREST():
                     min_serving = parsed_minimum_serving, category = parsed_categories)
             self._menu.add_item(item)
 
-            return json.dumps({'id': item.get_item_id()}) , 201, self._response_header
+            return json.dumps({'id': item.get_item_id()}) , 201, {"Content-Type": "application/json",
+                                    "Location": "/delectable/menu/" + str(item.get_item_id())}
 
     def post_item_price_json_dict(self, menu_id):
         if (not flask.request.json
@@ -361,7 +364,7 @@ class DelectableREST():
         else:
             print(flask.request.json['surcharge'])
             self._menu.set_surcharge(float(flask.request.json['surcharge']))
-            return "", 204, self._response_header
+            return "", 204, {"Content-Type": "application/json", "Location": "/delectable/surcharge/"}
 
     def post_order_delivered_json_dict(self, order_id):
         order = Delectable.order.Order
@@ -377,11 +380,10 @@ class DelectableREST():
                 print("Error: order id must be an integer value")
                 return "", 404, self._response_header
             else:
-                print("id is %i" %(order_id))
                 for individual_order in orders:
                     if individual_order.get_order_id() == order_id:
                         individual_order.set_delivery_status("delivered")
-                        return "", 204, self._response_header
+                        return "", 204, {"Content-Type": "application/json", "Location": "/delectable/order/" + str(order_id)}
             return "", 404, self._response_header
 
     # ***
