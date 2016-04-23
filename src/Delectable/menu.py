@@ -65,7 +65,7 @@ class Menu():
         return self._surcharge
 
     def set_surcharge(self, new_charge):
-        if type(new_charge) is int:
+        if (type(new_charge) is int) or (type(new_charge) is float):
             if new_charge >= 0:
                 self._surcharge = new_charge
         else:

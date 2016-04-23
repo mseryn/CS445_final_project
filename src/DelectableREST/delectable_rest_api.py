@@ -13,6 +13,7 @@
 ###
 
 import Delectable
+import DelectableReport
 
 import flask
 import json
@@ -287,22 +288,17 @@ class DelectableREST():
         return json.dumps(reports_list) , 200, self._response_header
 
     def get_report_in_range_json_dict(self, report_id):
-        if not flask.request.json:
-            # Not an expressly specified return - okay? QUESTION
-            print("Error: report id required")
-            return None, 400, self._response_header
-        else:
-            # get report corresponding to report_id
-            report = DelectableReport.report.Report()
-            reports = report.get_all_reports()
-            report_found = False
-            for key in reports:
-                if key == report_id:
-                    report_found = True
-                    desired_report_tuple = reports[key]
-            if not report_found:
-                print("Error: report not found")
-                return None, 404, self._response_header
+        # get report corresponding to report_id
+        report = DelectableReport.report.Report()
+        reports = report.get_all_reports()
+        report_found = False
+        for key in reports:
+            if key == report_id:
+                report_found = True
+                desired_report_tuple = reports[key]
+        if not report_found:
+            print("Error: report not found")
+            return "", 404, self._response_header
         start_date = flask.request.args.get('start_date', datetime.datetime.min)
         end_date = flask.request.args.get('end_date', datetime.datetime.max)
         individual_report = desired_report_tuple[1](start_date, end_date)
@@ -337,17 +333,20 @@ class DelectableREST():
 
             return json.dumps({'id': item.get_item_id()}) , 201, self._response_header
 
-    def post_item_price_json_dict(self):
+    def post_item_price_json_dict(self, menu_id):
         if (not flask.request.json
         or not 'id' in flask.request.json
         or not 'price_per_person' in flask.request.json):
             print("Error: not all components for item price change are present.  Aborting.")
-            return None, 400, self._response_header
+            return "", 400, self._response_header
         else:
             item_to_modify = self._menu.get_item_by_id(flask.request.json['id'])
-            item_to_modify.set_price_per_person(flask.request.json['price_per_person'])
-            return None, 204, self._response_header
-        # may need empty string instead of None
+            if item_to_modify:
+                item_to_modify.set_price_per_person(flask.request.json['price_per_person'])
+                return "", 204, self._response_header
+            else:
+                print("Error not found")
+                return "", 404, self._response_header
 
     def get_menu_surcharge_json_dict(self):
         return json.dumps({'surcharge': self._menu.get_surcharge()}) , 200, self._response_header
@@ -355,34 +354,35 @@ class DelectableREST():
     def post_menu_surcharge_json_dict(self):
         if not flask.request.json:
             print("Error: missing content")
-            return None, 204, self._response_header
+            return "", 204, self._response_header
         elif not 'surcharge' in flask.request.json:
             print("Error: not all components for surcharge POST are present.  Aborting.")
-            return None, 400, self._response_header
-        elif not type(flask.request.json['surcharge']) is float:
-            print("Error: surcharge must be float value")
-            return None, 400, self._response_header
+            return "", 400, self._response_header
         else:
+            print(flask.request.json['surcharge'])
             self._menu.set_surcharge(float(flask.request.json['surcharge']))
-            return
+            return "", 204, self._response_header
 
     def post_order_delivered_json_dict(self, order_id):
         order = Delectable.order.Order
         orders = order.get_all_orders()
         
-        if not order_id:
+        if (not flask.request.json
+        or not 'id' in flask.request.json):
             print("Error: missing arguments")
-            return None, 204, self._response_header
+            return "", 204, self._response_header
         else:
+            order_id = flask.request.json['id']
             if not type(order_id) is int:
                 print("Error: order id must be an integer value")
-                return None, 404, self._response_header
+                return "", 404, self._response_header
             else:
+                print("id is %i" %(order_id))
                 for individual_order in orders:
                     if individual_order.get_order_id() == order_id:
                         individual_order.set_delivery_status("delivered")
-                        return
-            return None, 404, self._response_header
+                        return "", 204, self._response_header
+            return "", 404, self._response_header
 
     # ***
     # *  Helper Routines for JSON Class
