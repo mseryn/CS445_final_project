@@ -89,8 +89,7 @@ class DelectableREST():
             return json.dumps(all_menu_dicts), 200, self._response_header
         else:
             # no menu items to return
-            return "", 200
-            #return "", 200, self._response_header
+            return "", 200, self._response_header
 
     def get_menu_item_json_dict(self, menu_id):
         individual_item = self._menu.get_item_by_id(menu_id)
