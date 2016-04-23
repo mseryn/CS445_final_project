@@ -127,7 +127,9 @@ class DelectableREST():
         order = Delectable.order.Order 
         if "date" in flask.request.args:
             request_date = self.string_to_date(flask.request.args["date"])
-            orders = [iorder for iorder in order.get_all_orders() if iorder.get_delivery_date().date() == request_date.date()]
+            orders = [iorder for iorder in order.get_all_orders() 
+                      if iorder.get_delivery_date().date() == request_date.date() 
+                       and iorder.get_delivery_status() == "open"]
         else:
             orders = order.get_all_orders()
 
