@@ -362,7 +362,6 @@ class DelectableREST():
             print("Error: not all components for surcharge POST are present.  Aborting.")
             return "", 400, self._response_header
         else:
-            print(flask.request.json['surcharge'])
             self._menu.set_surcharge(float(flask.request.json['surcharge']))
             return "", 204, {"Content-Type": "application/json", "Location": "/delectable/surcharge/"}
 

@@ -23,9 +23,9 @@ class Order():
     _order_id_counter = 0
 
     def __init__(self, initialized_customer, 
-            initialized_billing_address, 
-            initialized_delivery_address,
             initialized_menu, 
+            initialized_billing_address = "default billing address", 
+            initialized_delivery_address = "default delivery address",
             order_date = datetime.today(), 
             delivery_date = (datetime.today() + timedelta(1)), 
             items = [], 
