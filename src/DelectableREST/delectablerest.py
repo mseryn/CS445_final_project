@@ -26,6 +26,7 @@ class DelectableREST():
         self._response_header = {"Content-Type": "application/json"}
 
         self.app = flask.Flask(__name__)
+        self.app.debug = True
         self._menu = Delectable.menu.Menu()        
         
         # Menu calls:
@@ -97,7 +98,7 @@ class DelectableREST():
             menu_item = self._menu.get_menu_item_contents_in_dict(individual_item)
             return json.dumps(menu_item) , 200, self._response_header
         else:
-            return "", 404, self._response_handler
+            return "", 404, self._response_header
 
     # ***
     # *  REST commands for Order
@@ -171,7 +172,7 @@ class DelectableREST():
                     instructions = note_string)
 
             # returning formatted dict with cancelation URL
-            order_cancel_url = "/order/cancel/" + str(order.get_order_id())
+            order_cancel_url = "/delectable/order/cancel/" + str(order.get_order_id())
             return json.dumps({'id'         : order.get_order_id(), 
                                'cancel_url' : order_cancel_url}) , 201,  \
                                     {"Content-Type": "application/json", \
@@ -281,10 +282,8 @@ class DelectableREST():
         if not report_found:
             print("Error: report not found")
             return "", 404, self._response_header
-        start_date = self.string_to_date( \
-                flask.request.args.get('start_date', datetime.datetime.min))
-        end_date = self.string_to_date( \
-                flask.request.args.get('end_date', datetime.datetime.max))
+        start_date = flask.request.args.get('start_date', datetime.datetime.min)
+        end_date = flask.request.args.get('end_date', datetime.datetime.max)
         individual_report = desired_report_tuple[1](start_date, end_date)
         return json.dumps(individual_report.get_report_contents())
             
@@ -328,7 +327,9 @@ class DelectableREST():
             item_to_modify = self._menu.get_item_by_id(flask.request.json['id'])
             if item_to_modify:
                 item_to_modify.set_price_per_person(flask.request.json['price_per_person'])
-                return "", 204, self._response_header
+                return "" , 204, {"Content-Type": "application/json",
+                                                  "Location": ("/delectable/menu/" + 
+                                                              str(item_to_modify.get_item_id()))}
             else:
                 print("Error not found")
                 return "", 404, self._response_header
@@ -338,14 +339,13 @@ class DelectableREST():
 
     def post_menu_surcharge_json_dict(self):
         if not flask.request.json:
-            print("Error: missing content")
-            return "", 204, self._response_header
+            return "", 400, self._response_header
         elif not 'surcharge' in flask.request.json:
             print("Error: not all components for surcharge POST are present.  Aborting.")
             return "", 400, self._response_header
         else:
             self._menu.set_surcharge(float(flask.request.json['surcharge']))
-            return "", 204, {"Content-Type": "application/json", "Location": "/delectable/surcharge/"}
+            return "", 204, {"Content-Type": "application/json", "Location": "/delectable/admin/surcharge"}
 
     def post_order_delivered_json_dict(self, order_id):
         order = Delectable.order.Order
@@ -353,8 +353,7 @@ class DelectableREST():
         
         if (not flask.request.json
             or not 'id' in flask.request.json):
-            print("Error: missing arguments")
-            return "", 204, self._response_header
+            return "", 400, self._response_header
         else:
             order_id = flask.request.json['id']
             if not type(order_id) is int:
@@ -391,4 +390,4 @@ class DelectableREST():
 
 if __name__ == "__main__":
     api = DelectableREST()
-    api.run()
+    api.run(port=8080)
