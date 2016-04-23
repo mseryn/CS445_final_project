@@ -45,7 +45,7 @@ def test_menu_remove_item_to_empty():
     test_item = item.Item()
     test_menu = menu.Menu()
     test_menu.add_item(test_item)
-    test_menu.remove_item_by_name(test_item.get_name())
+    test_menu.remove_item_by_id(test_item.get_name())
     assert((test_menu.get_items() == []), "removing items to empty list in menu not correctly functioning")
 
 def test_menu_remove_item():
@@ -54,13 +54,13 @@ def test_menu_remove_item():
     test_menu = menu.Menu()
     test_menu.add_item(test_item_1)
     test_menu.add_item(test_item_2)
-    test_menu.remove_item_by_name(test_item_1.get_name())
+    test_menu.remove_item_by_id(test_item_1.get_item_id())
     assert((test_menu.get_items() == [test_item_2]), "remove item in menu not correctly functioning")
 
 def test_menu_remove_item_not_there():
     test_item = item.Item()
     test_menu = menu.Menu(items = [test_item])
-    test_menu.remove_item_by_name("test item not existant")
+    test_menu.remove_item_by_id("test item not existant")
     assert((test_menu.get_items() == [test_item]), "removing item by name not in list in menu not functioning")
 
 # Testing item filter
