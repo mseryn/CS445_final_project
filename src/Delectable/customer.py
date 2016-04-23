@@ -18,7 +18,6 @@ class Customer():
         self._last_name = str(last_name)
         self._first_name = str(first_name)
         self._email = str(email)
-        self._phone_number = 5555555555
         self._phone_number = phone_number
 
         self._customer_id = -1

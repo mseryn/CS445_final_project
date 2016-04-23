@@ -12,7 +12,6 @@
 
 # Unit tests for Customer
 
-from Delectable import address
 from Delectable import customer
 
 # Testing customer_id
@@ -61,25 +60,10 @@ def test_customer_initialize_email():
 # Testing phone number
 
 def test_customer_initialize_phone_number():
-    test_customer = customer.Customer("test Last Name", "test First Name", "test email address", 123456789)
-    assert((test_customer.get_phone_number() == 123456789), "default phone number in customer not correctly set")
+    test_customer = customer.Customer("test Last Name", "test First Name", "test email address", "123456789")
+    assert((test_customer.get_phone_number() == "123456789"), "default phone number in customer not correctly set")
 
 def test_customer_set_phone_number():
-    test_customer = customer.Customer("test Last Name", "test First Name", "test email address", 123456789)
-    test_customer.set_phone_number(5555555555)
-    assert((test_customer.get_phone_number() == 5555555555), "set phone number in customer not correctly set")
-
-def test_customer_set_phone_number_invalid_string():
-    test_customer = customer.Customer("test Last Name", "test First Name", "test email address", 123456789)
-    test_customer.set_phone_number("invalid string")
-    assert((test_customer.get_phone_number() == 123456789), "set phone number in customer allowed for invalid value")
-
-def test_customer_set_phone_number_invalid_too_short():
-    test_customer = customer.Customer("test Last Name", "test First Name", "test email address", 123456789)
-    test_customer.set_phone_number(555)
-    assert((test_customer.get_phone_number() == 123456789), "set phone number in customer allowed for invalid value")
-
-def test_customer_set_phone_number_invalid_float():
-    test_customer = customer.Customer("test Last Name", "test First Name", "test email address", 123456789)
-    test_customer.set_phone_number(555.5)
-    assert((test_customer.get_phone_number() == 123456789), "set phone number in customer allowed for invalid value")
+    test_customer = customer.Customer("test Last Name", "test First Name", "test email address", "123456789")
+    test_customer.set_phone_number("5555555555")
+    assert((test_customer.get_phone_number() == "5555555555"), "set phone number in customer not correctly set")
