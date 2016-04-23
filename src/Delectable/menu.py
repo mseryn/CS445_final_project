@@ -20,9 +20,11 @@ class Menu():
             if isinstance(item_individual, item.Item):
                 self._items.append(item_individual)
 
-        if type(surcharge) is int:
+        if (type(surcharge) is int) or (type(surcharge) is float):
             if surcharge >= 0:
                 self._surcharge = surcharge
+            else:
+                self._surcharge = 0
         else:
             print("\nError: surcharge must be positive number.  Setting surcharge to $0.")
             self._surcharge = 0
