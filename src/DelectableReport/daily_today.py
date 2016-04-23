@@ -17,11 +17,11 @@ import datetime
 
 class DailyToday(undelivered.Undelivered):
     def __init__(self, start_date, end_date):
-        super(self, datetime.today())
+        super().__init__(datetime.datetime.today(), None)
 
     def get_report_contents(self):
-        undelivered_dict = super.get_report_contents()
-        undelivered_dict['id'] = 801 
+        undelivered_dict = super().get_report_contents()
+        undelivered_dict['id'] = 801
         undelivered_dict['name'] = "Orders to deliver today"
         return undelivered_dict
 

@@ -17,14 +17,13 @@ import datetime
 
 class Undelivered(report.Report):
     def __init__(self, start_date, end_date):
-        if type(start_date) == datetime:
-            _self.start_date = start_date
+        self._start_date = start_date
 
     def get_report_contents(self):
         orders_for_date = []
-        orders = order.Order.get_all_orders()
+        orders = Delectable.order.Order.get_all_orders()
         for individual_order in orders:
-            if individual_order.get_status() == "open":
+            if individual_order.get_delivery_status() == "open":
                 if individual_order.get_delivery_date().date() == self._start_date.date():
                     orders_for_date.append(individual_order.get_order_details_in_dict())
         

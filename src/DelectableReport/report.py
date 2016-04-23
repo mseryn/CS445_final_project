@@ -34,7 +34,7 @@ class Report():
         else:
             print("\nError: No such report ID")
 
-    def get_all_reports():
+    def get_all_reports(self):
         return Report._reports
 
 from . import daily_today, daily_tomorrow, revenue, deliveries
