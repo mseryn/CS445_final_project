@@ -144,6 +144,7 @@ class DelectableREST():
         return json.dumps(all_order_dicts) , 200, self._response_header
 
     def get_orders_by_day_json_dict(self, datestring):
+        print("in DAY")
         orders_for_date = []
         order_item = {}
         order = Delectable.order.Order 
@@ -160,14 +161,15 @@ class DelectableREST():
 
         for individual_order in orders:
             if individual_order.get_delivery_date().date() == parsed_date.date():
-                order_item['id'] = individual_order.get_order_id()
-                order_item['order_date'] = individual_order.get_order_date().strftime("%Y%m%d")
-                order_item['delivery_date'] = individual_order.get_delivery_date().strftime("%Y%m%d")
-                order_item['amount'] = individual_order.get_total_cost()
-                order_item['surcharge'] = individual_order.get_surcharge_considering_day()
-                order_item['status'] = individual_order.get_status()
-                order_item['ordered_by'] = individual_order.get_customer().get_email()
-                orders_for_date.append(order_item)
+                if individual_order.get_delivery_status == "open":
+                    order_item['id'] = individual_order.get_order_id()
+                    order_item['order_date'] = individual_order.get_order_date().strftime("%Y%m%d")
+                    order_item['delivery_date'] = individual_order.get_delivery_date().strftime("%Y%m%d")
+                    order_item['amount'] = individual_order.get_total_cost()
+                    order_item['surcharge'] = individual_order.get_surcharge_considering_day()
+                    order_item['status'] = individual_order.get_delivery_status()
+                    order_item['ordered_by'] = individual_order.get_customer().get_email()
+                    orders_for_date.append(order_item)
         return json.dumps(orders_for_date) , 200, self._response_header
 
     def put_order_json_dict(self):
@@ -193,7 +195,7 @@ class DelectableREST():
             # getting personal information
             customer_dict = flask.request.json['personal_info']
             customer_name = customer_dict['name']
-            customer_last_name = customer_name.split()[1:]
+            customer_last_name = " ".join(customer_name.split()[1:])
             customer_first_name = customer_name.split()[0]
             customer_email = customer_dict['email']
             customer_phone = customer_dict['phone']
@@ -212,7 +214,7 @@ class DelectableREST():
 
             # making the order
             order = Delectable.order.Order(parsed_customer, address_string, 
-                    address_string, delivery_date = parsed_date, 
+                    address_string, self._menu, delivery_date = parsed_date, 
                     items = item_input_list,  instructions = note_string)
 
             # returning formatted dict with cancelation URL
@@ -229,30 +231,12 @@ class DelectableREST():
         for individual_order in orders:
             if individual_order.get_order_id() == order_id:
                 order_found = True
-                order_item['id'] = individual_order.get_order_id()
-                order_item['amount'] = individual_order.get_total_cost()
-                order_item['surcharge'] = individual_order.get_surcharge_considering_day()
-                order_item['status'] = individual_order.get_status()
-                order_item['order_date'] = individual_order.get_order_date().strftime("%Y%m%d")
-                order_item['delivery_date'] = individual_order.get_delivery_date().strftime("%Y%m%d")
-                order_customer = individual_order.get_customer()
-                order_item['ordered_by'] = {"name": (order_customer.get_first_name() 
-                                                    + order_customer.get_last_name()),
-                                            "email": order_customer.get_email(),
-                                            "phone": order_customer.get_phone_number() }
-                order_item['delivery_address'] = individual_order.get_delivery_address()
-                order_item['note'] = individual_order.get_instructions()
-                items = individual_order.get_items()
-                order_item['order_detail'] = []
-                for item in items:
-                    order_item['order_detail'].append({"id": item.get_item_id(),
-                                                       "name": item.get_name(),
-                                                       "count": item.get_serving_size() })
+                order_item = individual_order.get_order_details_in_dict()
         if order_found:
             return json.dumps(order_item) , 200, self._response_header
         else:
             print("Error: order not found")
-            return None, 404, self._response_header
+            return "", 404
     
     def post_order_cancel_json_dict(self, order_id):
         order = Delectable.order.Order 
@@ -266,7 +250,7 @@ class DelectableREST():
             return "", 204, {"Content-Type": "application/json", "Location": "/delectable/order/" + order_id}
         else:
             print("Error: order not found")
-            return None, 404, self._response_header
+            return "", 404
 
 
     # ***
@@ -274,19 +258,12 @@ class DelectableREST():
     # ***
 
     def get_customers_json_dict(self):
-        customer = Delectable.customer.Customer()
+        customer = Delectable.customer.Customer
         customers = customer.get_all_customers()
-        customer_item ={}
         customer_dict_list = []
 
         for individual_customer in customers:
-            customer_item['id'] = individual_customer.get_customer_id()
-            customer_item['name'] = (individual_customer.get_first_name() + 
-                                    individual_customer.get_last_name())
-            customer_item['email'] = individual_customer.get_email()
-            customer_item['phone'] = individual_customer.get_phone_number()
-            customer_dict_list.append(customer_item)
-            customer_item ={}
+            customer_dict_list.append(individual_customer.get_customer_details_dict())
         return json.dumps(customer_dict_list) , 200, self._response_header
 
     def get_customer_by_key_json_dict(self, query):
@@ -297,13 +274,7 @@ class DelectableREST():
 
         for individual_customer in customers:
             if customer_key_match(individual_customer, query):
-                customer_item['id'] = individual_customer.get_customer_id()
-                customer_item['name'] = (individual_customer.get_first_name() + 
-                                        individual_customer.get_last_name())
-                customer_item['email'] = individual_customer.get_email()
-                customer_item['phone'] = individual_customer.get_phone_number()
-                customer_dict_list.append(customer_item)
-                customer_item ={}
+                customer_dict_list.append(individual_customer.get_customer_details_dict())
         return json.dumps(customer_dict_list) , 200, self._response_header
 
     def get_customer_by_id_json_dict(self, customer_id):
@@ -319,11 +290,7 @@ class DelectableREST():
         for individual_customer in customers:
             if individual_customer.get_customer_id() == customer_id:
                 customer_found = True
-                customer_item['id'] = individual_customer.get_customer_id()
-                customer_item['name'] = (individual_customer.get_first_name() + 
-                                        individual_customer.get_last_name())
-                customer_item['email'] = individual_customer.get_email()
-                customer_item['phone'] = individual_customer.get_phone_number()
+                customer_item = individual_customer.get_customer_details_dict()
                 for individual_order in orders:
                     if individual_order.get_customer_id() == customer_item["id"]:
                         order_item["id"] = individual_order.get_order_id()
@@ -333,7 +300,7 @@ class DelectableREST():
                             individual_order.get_delivery_date().strftime("%Y%m%d")
                         order_item["amount"] = individual_order.get_total_item_cost()
                         order_item["surcharge"] = individual_order.get_surcharge_considering_day()
-                        order_item["status"] = individual_order.get_status()
+                        order_item["status"] = individual_order.get_delivery_status()
                         customer_orders.append(order_item)
                         order_item = {}
                 customer_item['orders'] = customer_orders

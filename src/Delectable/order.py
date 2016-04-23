@@ -25,12 +25,14 @@ class Order():
 
     def __init__(self, initialized_customer, 
             initialized_billing_address, 
-            initialized_delivery_address, 
+            initialized_delivery_address,
+            initialized_menu, 
             order_date = datetime.today(), 
             delivery_date = (datetime.today() + timedelta(1)), 
-            items = [], instructions = ""):
+            items = [], 
+            instructions = ""):
 
-        self._menu = menu.Menu()
+        self._menu = initialized_menu
         self._surcharge = self._menu.get_surcharge()
 
         # Dealing with order ID
@@ -57,15 +59,16 @@ class Order():
         # Items are then stored as (item, serving_size) tuples
         self._items = []
         self._total_item_cost = 0
-        for item_tuple in items:
-            new_item = self._menu.get_item_by_id(item_tuple[0])
-            new_item_servings = item_tuple[1]
-            if new_item:
-                if new_item_servings >= new_item.get_min_serving():
-                    self._items.append((new_item, new_item_servings))
-                    self._total_item_cost += new_item.get_price_per_person() * new_item_servings
-                else:
-                    print("Error: too few servings ordered for item %i" %(new_item.get_item_id()))
+        for item_id, quantity in items:
+            new_item = self._menu.get_item_by_id(item_id)
+            if new_item is not None:
+                new_item_servings = quantity
+                if new_item:
+                    if new_item_servings >= new_item.get_min_serving():
+                        self._items.append((new_item, new_item_servings))
+                        self._total_item_cost += new_item.get_price_per_person() * new_item_servings
+                    else:
+                        print("Error: too few servings ordered for item %i" %(new_item.get_item_id()))
 
         # Setting address strings
         self._billing_address = initialized_billing_address
@@ -180,6 +183,12 @@ class Order():
     def set_instructions(self, new_instructions):
         self._instructions = new_instructions
 
+    def get_delivery_address(self):
+        return self._delivery_address
+
+    def get_billing_address(self):
+        return self._billing_address
+
     def get_order_details_in_dict(self):
         """
         Returns a dict containing the following information concerning an order:
@@ -192,24 +201,25 @@ class Order():
         items in an order:
             id (item), name, count (number of servings ordered)
         """
+        order_item = {}
         order_item['id'] = self._order_id
-        order.item['amount'] = self._total_item_cost
+        order_item['amount'] = self._total_item_cost
         order_item['surcharge'] = self.get_surcharge_considering_day()
         order_item['status'] = self._delivery_status
         order_item['order_date'] = self._order_date.strftime("%Y%m%d")
         order_item['delivery_date'] = self._delivery_date.strftime("%Y%m%d")
-        order_customer = self._customer
-        order_item['ordered_by'] = {"name": (self._customer.get_first_name() 
-                                            + self._customer.get_last_name()),
+        name_string = self._customer.get_first_name() + " " + self._customer.get_last_name()
+        order_item['ordered_by'] = {"name" : name_string,
                                     "email": self._customer.get_email(),
-                                    "phone": self._customer.get_phone_number() }
+                                    "phone": self._customer.get_phone_number(), 
+                                    }
         order_item['delivery_address'] = self._delivery_address
         order_item['note'] = self._instructions
-        items = self._items
         order_item['order_detail'] = []
-        for item in items:
-            order_item['order_detail'].append({"id": item.get_item_id(),
-                                               "name": item.get_name(),
-                                               "count": item.get_serving_size() })
+        for individual_item, serving_size in self._items:
+            order_item['order_detail'].append({"id"   : individual_item.get_item_id(),
+                                               "name" : individual_item.get_name(),
+                                               "count": serving_size,
+                                               })
         return order_item
 

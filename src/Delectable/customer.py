@@ -69,3 +69,11 @@ class Customer():
             return True
         else:
             return False
+
+    def get_customer_details_dict(self):
+        customer_item = {}
+        customer_item['id'] = self._customer_id
+        customer_item['name'] = (self._first_name + " " + self._last_name)
+        customer_item['email'] = self._email
+        customer_item['phone'] = self._phone_number
+        return customer_item
