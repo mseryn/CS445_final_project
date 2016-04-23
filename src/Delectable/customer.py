@@ -64,7 +64,7 @@ class Customer():
         return self._phone_number
 
     def set_phone_number(self, new_phone_number):
-        self._new_phone_number = new_phone_number
+        self._phone_number = new_phone_number
 
     def __eq__(self, other_customer):
         if ((self._last_name == other_customer.get_last_name())

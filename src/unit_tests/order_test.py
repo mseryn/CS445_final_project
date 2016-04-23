@@ -26,21 +26,13 @@ def test_order_get_all_orders():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu)
-    assert((order.Order.get_all_orders() == [test_order]), "static method retrieval of all orders not correctly working")
+    assert(order.Order.get_all_orders() == [test_order]), "static method retrieval of all orders not correctly working"
 
 def test_order_get_order_by_id():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu)
-    assert((order.Order.get_order_by_id(test_order.get_order_id()) == test_order.get_order_id()), "static method retrieval of order by ID not correctly working")
-
-# Testing all_customers
-
-def test_order_get_all_customers():
-    test_menu = menu.Menu()
-    test_customer = customer.Customer("default last", "default first", "default email", 123456789)
-    test_order = order.Order(test_customer, test_menu)
-    assert((order.Order.get_all_customers() == [test_customer]), "static method retrieval of all customers not correctly working")
+    assert(order.Order.get_order_by_id(test_order.get_order_id()) == test_order), "static method retrieval of order by ID not correctly working"
 
 # Testing order_id
 
@@ -48,13 +40,15 @@ def test_order_id():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu)
-    assert((test_order.get_order_id() == 0), "first order ID not correctly set")
+    assert(test_order.get_order_id() == 2), "first order ID not correctly set"
 
-def test_order_id_incriment():
+# Testing all_customers
+
+def test_order_get_all_customers():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu)
-    assert((test_order.get_order_id() == 1), "incrimented order ID not correctly set")
+    assert(order.Order.get_all_customers() == [test_customer]), "static method retrieval of all customers not correctly working"
 
 # Testing delivery_status
 
@@ -62,28 +56,28 @@ def test_order_delivery_status_at_creation():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu)
-    assert((test_order.get_delivery_status == "open"), "delivery status not 'open' when order first created")
+    assert(test_order.get_delivery_status() == 'open'), "delivery status not 'open' when order first created"
 
 def test_order_delivery_status_set_delivered():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu)
     test_order.set_delivery_status("delivered")
-    assert((test_order.get_delivery_status == "delivered"), "set delivery status in object not functioning")
+    assert(test_order.get_delivery_status() == 'delivered'), "set delivery status in object not functioning"
 
 def test_order_delivery_status_set_cancelled():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu)
     test_order.set_delivery_status("cancelled")
-    assert((test_order.get_delivery_status == "cancelled"), "set delivery status in object not functioning")
+    assert(test_order.get_delivery_status() == 'cancelled'), "set delivery status in object not functioning"
 
 def test_order_delivery_status_invalid():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu)
     test_order.set_delivery_status("this")
-    assert((test_order.get_delivery_status == "open"), "set delivery status in object allowed for invalid value")
+    assert(test_order.get_delivery_status() == 'open'), "set delivery status in object allowed for invalid value"
 
 # Testing order_date
 
@@ -91,13 +85,13 @@ def test_order_default_order_date():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu)
-    assert((test_order.get_order_date() == datetime.now()), "default order date in order not correctly set to today's date")
+    assert(test_order.get_order_date().date() == datetime.now().date()), "default order date in order not correctly set to today's date"
 
 def test_order_default_order_date_invalid():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu, order_date = 15 )
-    assert((test_order.get_order_date() == datetime.now()), "initialized order date in order allowed for invalid date")
+    assert(test_order.get_order_date().date() == datetime.now().date()), "initialized order date in order allowed for invalid date"
 
 # Testing delivery_date
 
@@ -106,14 +100,14 @@ def test_order_default_delivery_date():
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     tomorrow = datetime.now() + timedelta(1)
     test_order = order.Order(test_customer, test_menu)
-    assert((test_order.get_delivery_date().date() == tomorrow.date()), "default delivery date in order not correctly set to tomorrow's date")
+    assert(test_order.get_delivery_date().date() == tomorrow.date()), "default delivery date in order not correctly set to tomorrow's date"
 
 def test_order_default_order_date_invalid():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     tomorrow = datetime.now() + timedelta(1)
     test_order = order.Order(test_customer, test_menu, delivery_date = 15)
-    assert((test_order.get_delivery_date().date() == tomorrow.date()), "initialized delivery date in order allowed for invalid date")
+    assert(test_order.get_delivery_date().date() == tomorrow.date()), "initialized delivery date in order allowed for invalid date"
 
 def test_order_set_delivery_date():
     test_menu = menu.Menu()
@@ -121,7 +115,7 @@ def test_order_set_delivery_date():
     test_order = order.Order(test_customer, test_menu)
     tomorrow = datetime.now() + timedelta(1)
     test_order.set_delivery_date(tomorrow)
-    assert((test_order.get_delivery_date().date() == tomorrow.date()), "default delivery date in order not correctly set to tomorrow's date")
+    assert(test_order.get_delivery_date().date() == tomorrow.date()), "default delivery date in order not correctly set to tomorrow's date"
 
 # Testing items
 
@@ -129,37 +123,40 @@ def test_order_default_items():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu)
-    assert((test_order.get_items() == []), "default items in order not correctly set")
+    assert(test_order.get_items() == []), "default items in order not correctly set"
 
 def test_order_initialized_items():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_item = item.Item()
-    test_order = order.Order(test_customer, test_menu, items = [(test_item.get_item_id(), 5)])
-    assert((test_order.get_items() == [test_item]), "initialized items in order not correctly set")
+    test_menu.add_item(test_item)
+    test_order = order.Order(test_customer, test_menu, items = [(test_item.get_item_id(), 15)])
+    assert(test_order.get_items() == [(test_item, 15)]), "initialized items in order not correctly set"
 
 def test_order_initialized_items_invalid():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu, items = [(15, 15)])
-    assert((test_order.get_items() == []), "initialized items in order allowed invalid value")
+    assert(test_order.get_items() == []), "initialized items in order allowed invalid value"
 
 def test_order_add_item():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu)
     test_item = item.Item()
-    test_order.add_item((test_item.get_item_id(), 5))
-    assert((test_order.get_items() == [test_item]), "added item in order not correctly set")
+    test_menu.add_item(test_item)
+    test_order.add_item((test_item.get_item_id(), 15))
+    assert(test_order.get_items() == [(test_item, 15)]), "added item in order not correctly set"
 
 def test_order_remove_item_to_empty():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu)
     test_item = item.Item()
-    test_order.add_item((test_item.get_item_id(), 5))
+    test_menu.add_item(test_item)
+    test_order.add_item((test_item.get_item_id(), 15))
     test_order.remove_item(test_item.get_item_id())
-    assert((test_order.get_items() == []), "removing all items from order not correctly removed")
+    assert(test_order.get_items() == []), "removing all items from order not correctly removed"
 
 def test_order_remove_item():
     test_menu = menu.Menu()
@@ -167,10 +164,12 @@ def test_order_remove_item():
     test_order = order.Order(test_customer, test_menu)
     test_item_1 = item.Item(name = "default item 1")
     test_item_2 = item.Item(name = "default item 2")
-    test_order.add_item((test_item_1.get_item_id(), 5))
-    test_order.add_item((test_item_2.get_item_id(), 5))
+    test_menu.add_item(test_item_1)
+    test_menu.add_item(test_item_2)
+    test_order.add_item((test_item_1.get_item_id(), 15))
+    test_order.add_item((test_item_2.get_item_id(), 15))
     test_order.remove_item(test_item_1.get_item_id())
-    assert((test_order.get_items() == [test_item_2]), "removed item in order not correctly removed")
+    assert(test_order.get_items() == [(test_item_2, 15)]), "removed item in order not correctly removed"
 
 # Testing surcharge
 
@@ -178,7 +177,7 @@ def test_order_default_surcharge():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu)
-    assert((test_order.get_surcharge() == 0), "default surcharge in order not correctly set")
+    assert(test_order.get_surcharge() == 0), "default surcharge in order not correctly set"
 
 def get_surcharge_considering_day():
     test_menu = menu.Menu()
@@ -187,9 +186,9 @@ def get_surcharge_considering_day():
     test_order = order.Order(test_customer, test_menu)
     today = datetime.now().weekday()
     if today > 4:
-        assert((test_order.get_surcharge() == 15.25), "surcharge on a weekend not correctly applying to order")
+        assert(test_order.get_surcharge() == 15.25), "surcharge on a weekend not correctly applying to order"
     else:
-        assert((test_order.get_surcharge() == 0), "surcharge on a weekday not correctly applying to order")
+        assert(test_order.get_surcharge() == 0), "surcharge on a weekday not correctly applying to order"
 
 # Testing instructions
 
@@ -197,20 +196,20 @@ def test_order_default_instructions():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu)
-    assert((test_order.get_instructions == ""), "default instructions in order not correctly set")
+    assert(test_order.get_instructions() == ""), "default instructions in order not correctly set"
 
 def test_order_initialized_instructions():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu, instructions = "test instructions")
-    assert((test_order.get_instructions == "test instructions"), "initialized instructions in order not correctly set")
+    assert(test_order.get_instructions() == "test instructions"), "initialized instructions in order not correctly set"
 
 def test_order_set_instructions():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu)
     test_order.set_instructions("test instructions")
-    assert((test_order.get_instructions == "test instructions"), "set instructions in order not correctly set")
+    assert(test_order.get_instructions() == "test instructions"), "set instructions in order not correctly set"
 
 # Testing customer
 
@@ -218,13 +217,13 @@ def test_order_get_customer_id():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu)
-    assert((test_order.get_customer_id() == test_customer.get_customer_id()), "customer id retrieval fails in order")
+    assert(test_order.get_customer_id() == test_customer.get_customer_id()), "customer id retrieval fails in order"
 
 def test_order_get_customer():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu)
-    assert((test_order.get_customer() == test_customer), "customer retrieval fails in order")
+    assert(test_order.get_customer() == test_customer), "customer retrieval fails in order"
 
 # Testing billing_address
 
@@ -232,7 +231,7 @@ def test_order_billing_address():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu)
-    assert((test_order.get_billing_address() == "default billing address"), "billing address in order fails")
+    assert(test_order.get_billing_address() == "default billing address"), "billing address in order fails"
 
 # Testing delivery_address
 
@@ -240,7 +239,7 @@ def test_order_delivery_address():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu)
-    assert((test_order.get_delivery_address() == "default delivery address"), "delivery address in order fails")
+    assert(test_order.get_delivery_address() == "default delivery address"), "delivery address in order fails"
 
 # Testing cost
 
@@ -248,21 +247,24 @@ def test_order_total_cost():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_item_1 = item.Item(price = 15.25)
+    test_menu.add_item(test_item_1)
     test_order = order.Order(test_customer, test_menu, items = [(test_item_1.get_item_id(), 15)])
-    assert((test_order.get_total_cost() == (15.25 * 15)), "total cost calculation in order fails")
+    assert(test_order.get_total_cost() == (15.25 * 15)), "total cost calculation in order fails"
 
 def test_order_items_cost():
     test_menu = menu.Menu()
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_item_1 = item.Item(price = 15.25)
+    test_menu.add_item(test_item_1)
     test_order = order.Order(test_customer, test_menu, items = [(test_item_1.get_item_id(), 15)])
-    assert((test_order.get_total_item_cost() == (15.25 * 15)), "total item cost calculation in order fails")
+    assert(test_order.get_total_item_cost() == (15.25 * 15)), "total item cost calculation in order fails"
 
 # Testing order dict output
 
 def test_order_formatted_dict_output():
     test_menu = menu.Menu()
     test_item = item.Item()
+    test_menu.add_item(test_item)
     test_customer = customer.Customer("default last", "default first", "default email", 123456789)
     test_order = order.Order(test_customer, test_menu, items = [(test_item, 16)])
     expected = {'id'              : test_order.get_order_id(),
@@ -286,4 +288,4 @@ def test_order_formatted_dict_output():
                                            "name" : individual_item.get_name(),
                                            "count": serving_size,
                                          })
-    assert((test_order.get_order_details_in_dict() == expected), "dictionary output of order not correctly functioning")
+    assert(test_order.get_order_details_in_dict() == expected), "dictionary output of order not correctly functioning"

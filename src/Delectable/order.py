@@ -173,7 +173,8 @@ class Order():
         Takes item_id, removes from list of items in order
         """
         for item_tuple in self._items:
-            if item_tuple[0] == item_id:
+            if item_tuple[0].get_item_id() == item_id:
+                self._total_item_cost -= item_tuple[0].get_price_per_person() * item_tuple[1]
                 self._items.remove(item_tuple)
 
     def get_instructions(self):

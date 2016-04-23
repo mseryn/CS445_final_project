@@ -58,15 +58,15 @@ class Item():
             self._price = new_price
             self.set_last_modified_date()
         else:
-            print("Error: item price must be at least $0.")
+            print("Error: item price must be at least $0. No change made to the item's price.")
 
     def get_min_serving(self):
         return self._min_serving
 
     def set_min_serving(self, new_min_serving):
-        if new_min_serving > 0:
+        if new_min_serving >= 0:
             if new_min_serving % 1 == 0:
-                self._min_serving = new_min_serving
+                self._min_serving = int(new_min_serving)
             else:
                 self._min_serving = 1 + int(new_min_serving)
             self.set_last_modified_date()
