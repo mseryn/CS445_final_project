@@ -17,9 +17,8 @@ import datetime
 
 class Deliveries(report.Report):
     def __init__(self, start_date, end_date):
-        if (type(start_date) == datetime) and (type(end_date) == datetime):
-            self._start_date = start_date
-            self._end_date = end_date
+        self._start_date = start_date
+        self._end_date = end_date
 
         # Getting all orders in the date range
         self._all_orders = [individual_order for individual_order in order.Order.get_all_orders()

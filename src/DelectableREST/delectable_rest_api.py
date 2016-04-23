@@ -165,9 +165,11 @@ class DelectableREST():
                 item_input_list.append((item_dict["id"], item_dict["count"]))
 
             # making the order
-            order = Delectable.order.Order(parsed_customer, address_string, 
-                    address_string, self._menu, delivery_date = parsed_date, 
-                    items = item_input_list,  instructions = note_string)
+            order = Delectable.order.Order(parsed_customer, self._menu, 
+                    initialized_billing_address = address_string, 
+                    initialized_delivery_address = address_string, 
+                    delivery_date = parsed_date, items = item_input_list,  
+                    instructions = note_string)
 
             # returning formatted dict with cancelation URL
             order_cancel_url = "/order/cancel/" + str(order.get_order_id())
@@ -280,8 +282,10 @@ class DelectableREST():
         if not report_found:
             print("Error: report not found")
             return "", 404, self._response_header
-        start_date = flask.request.args.get('start_date', datetime.datetime.min)
-        end_date = flask.request.args.get('end_date', datetime.datetime.max)
+        start_date = self.string_to_date( \
+                flask.request.args.get('start_date', datetime.datetime.min))
+        end_date = self.string_to_date( \
+                flask.request.args.get('end_date', datetime.datetime.max))
         individual_report = desired_report_tuple[1](start_date, end_date)
         return json.dumps(individual_report.get_report_contents())
             
