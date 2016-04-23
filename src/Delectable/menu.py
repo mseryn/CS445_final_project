@@ -70,3 +70,18 @@ class Menu():
                 self._surcharge = new_charge
         else:
             print("\nError: Surcharge must be a positive number. Surcharge not changed.")
+
+    def get_menu_item_contents_in_dict(self, individual_item):
+        menu_item = {}
+        if individual_item in self._items:
+            return individual_item.get_item_contents_in_dict()
+        return menu_item
+
+    def get_menu_contents_in_dict(self):
+        menu_dict = {'surcharge': self._surcharge,
+                     'items'    : [],
+                    }
+        for each_item in self._items:
+            menu_dict['items'].append(self.get_menu_item_contents_in_dict(each_item))
+        return menu_dict
+        

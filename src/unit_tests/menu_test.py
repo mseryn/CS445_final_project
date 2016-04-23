@@ -114,3 +114,20 @@ def test_menu_set_surcharge_invalid_string():
     test_menu = menu.Menu()
     test_menu.set_surcharge("test invalid string")
     assert((test_menu.get_surcharge() == 0), "set surcharge value in menu allowed for invalid value")
+
+# Testing consolidated menu data output
+
+def test_menu_item_contents_in_dict():
+    test_item = item.Item()
+    test_menu = menu.Menu(items = [test_item])
+    expected = test_item.get_item_contents_in_dict()
+    assert((test_menu.get_menu_item_contents_in_dict(test_item) == expected), "consolidated menu item contents not properly formatted")
+
+def test_menu_contents_in_dict():
+    test_item = item.Item()
+    test_menu = menu.Menu(items = [test_item])
+    test_menu.set_surcharge(15.25)
+    expected = {'surcharge': 15.25,
+                'items'    : [test_item.get_item_contents_in_dict()],
+                }
+    assert((test_menu.get_menu_contents_in_dict() == expected), "consolidated menu contents not properly formatted")
