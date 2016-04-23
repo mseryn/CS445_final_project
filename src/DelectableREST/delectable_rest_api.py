@@ -36,9 +36,6 @@ class DelectableREST():
         # Order calls:
         self.app.add_url_rule('/delectable/order', 'get_orders_json_dict', 
                 self.get_orders_json_dict, methods = ['GET'])
-        self.app.add_url_rule('/delectable/order?date=<string:datestring>', 
-                'get_orders_by_day_json_dict', self.get_orders_by_day_json_dict, 
-                methods = ['GET'])
         self.app.add_url_rule('/delectable/order', 'put_order_json_dict', 
                 self.put_order_json_dict, methods = ['PUT'])
         self.app.add_url_rule('/delectable/order/<int:order_id>', 
@@ -128,7 +125,11 @@ class DelectableREST():
         order_item = {}
         all_order_dicts = []
         order = Delectable.order.Order 
-        orders = order.get_all_orders()
+        if "date" in flask.request.args:
+            request_date = self.string_to_date(flask.request.args["date"])
+            orders = [iorder for iorder in order.get_all_orders() if iorder.get_delivery_date().date() == request_date.date()]
+        else:
+            orders = order.get_all_orders()
 
         for individual_order in orders:
             order_item['id'] = individual_order.get_order_id()
@@ -142,35 +143,6 @@ class DelectableREST():
             all_order_dicts.append(order_item)
             order_item = {}
         return json.dumps(all_order_dicts) , 200, self._response_header
-
-    def get_orders_by_day_json_dict(self, datestring):
-        print("in DAY")
-        orders_for_date = []
-        order_item = {}
-        order = Delectable.order.Order 
-        orders = order.get_all_orders()
-
-        parsed_year = int(datestring[0:4])
-        parsed_month = int(datestring[4:6])
-        parsed_day = int(datestring[6:8])
-        try:
-            parsed_date = datetime.datetime(year = parsed_year, month = parsed_month, day = parsed_day)
-        except:
-            print("Error: year, month, date provided not acceptable.  Defaulting to today's date.")
-            parsed_date = datetime.datetime.now()
-
-        for individual_order in orders:
-            if individual_order.get_delivery_date().date() == parsed_date.date():
-                if individual_order.get_delivery_status == "open":
-                    order_item['id'] = individual_order.get_order_id()
-                    order_item['order_date'] = individual_order.get_order_date().strftime("%Y%m%d")
-                    order_item['delivery_date'] = individual_order.get_delivery_date().strftime("%Y%m%d")
-                    order_item['amount'] = individual_order.get_total_cost()
-                    order_item['surcharge'] = individual_order.get_surcharge_considering_day()
-                    order_item['status'] = individual_order.get_delivery_status()
-                    order_item['ordered_by'] = individual_order.get_customer().get_email()
-                    orders_for_date.append(order_item)
-        return json.dumps(orders_for_date) , 200, self._response_header
 
     def put_order_json_dict(self):
         # Ensuring all necessary fields are filled:
