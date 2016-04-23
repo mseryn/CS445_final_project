@@ -13,8 +13,10 @@
 
 Dependencies: 
     Python 3
-    Flask   (Python web framework)
-    pytest (if wishing to run unit tests)
+    pip3....... Python package manager
+    Flask...... Python web framework
+    pytest..... For running unit tests
+    curl....... For running sample uses
 
 
 General Instructions:
