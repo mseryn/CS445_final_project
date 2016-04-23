@@ -14,6 +14,8 @@
 
 from Delectable import item
 
+import datetime
+
 # Testing name
 
 def test_item_default_name():
@@ -106,3 +108,30 @@ def test_item_remove_all_categories():
     test_item.add_category("Test Category 1")
     test_item.remove_category("Test Category 1")
     assert((test_item.get_category() == []), "removing all categories in item did not correctly remove all categories")
+
+# Testing last_modified_date
+
+def test_item_initialized_last_modified_date():
+    test_item = item.Item()
+    assert((test_item.get_last_modified_date().date() == datetime.datetime.now().date()), "last_modified date not successfully set upon item creation")
+
+# Testing creation_date
+
+def test_item_initialized_creation_date():
+    test_item = item.Item()
+    assert((test_item.get_creation_date().date() == datetime.datetime.now().date()), "creation date not successfully set")
+
+# Testing item information dictionary
+
+def test_item_contents_in_dict():
+    test_item = item.Item()
+    expected = {'id'     : test_item.get_item_id(),
+    'name'               : test_item.get_name(),
+    'price_per_person'   : test_item.get_price_per_person(),
+    'minimum_order'      : test_item.get_min_serving(),
+    'categories'         : [{'name' : category} for category in test_item.get_category()],
+    'create_date'        : test_item.get_creation_date().strftime("%Y%m%d"),
+    'last_modified_date' : test_item.get_last_modified_date().strftime("%Y%m%d"),
+    }
+    assert((test_item.get_item_contents_in_dict() == expected), "item contents in dict form do not match expected")
+

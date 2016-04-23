@@ -92,3 +92,15 @@ class Item():
 
     def get_creation_date(self):
         return self._creation_date
+
+    def get_item_contents_in_dict(self):
+        item_contents = {}
+        item_contents['id'] = self._item_id
+        item_contents['name'] = self._name
+        item_contents['price_per_person'] = self._price
+        item_contents['minimum_order'] = self._min_serving
+        item_contents['categories'] = [{'name' : category} for category in self._category]
+        item_contents['create_date'] = self._creation_date.strftime("%Y%m%d")
+        item_contents['last_modified_date'] = self._last_modified_date.strftime("%Y%m%d")
+        return item_contents
+
