@@ -79,20 +79,12 @@ class DelectableREST():
     # ***
 
     def get_menu_json_dict(self):
-        menu_item = {}
         all_menu_dicts = []
         items = self._menu.get_items()
 
         if items:
             for individual_item in items:
-                menu_item['id'] = individual_item.get_item_id()
-                menu_item['name'] = individual_item.get_name()
-                menu_item['price_per_person'] = individual_item.get_price_per_person()
-                menu_item['minimum_order'] = individual_item.get_min_serving()
-                menu_item['categories'] = [{'name' : category} 
-                        for category in individual_item.get_category()]
-                all_menu_dicts.append(menu_item)
-                menu_item = {}
+                all_menu_dicts.append(self._menu.get_menu_item_contents_in_dict(individual_item))
         if all_menu_dicts:
             return json.dumps(all_menu_dicts), 200, self._response_header
         else:
@@ -101,26 +93,18 @@ class DelectableREST():
             #return "", 200, self._response_header
 
     def get_menu_item_json_dict(self, menu_id):
-        menu_item = {}
         individual_item = self._menu.get_item_by_id(menu_id)
         if individual_item:
-            menu_item['id'] = individual_item.get_item_id()
-            menu_item['name'] = individual_item.get_name()
-            menu_item['price_per_person'] = individual_item.get_price_per_person()
-            menu_item['minimum_order'] = individual_item.get_min_serving()
-            menu_item['categories'] = [{'name' : category} for category in individual_item.get_category()]
-            menu_item['create_date'] = individual_item.get_creation_date().strftime("%Y%m%d")
-            menu_item['last_modified_date'] = individual_item.get_last_modified_date().strftime("%Y%m%d")
+            menu_item = self._menu.get_menu_item_contents_in_dict(individual_item)
             return json.dumps(menu_item) , 200, self._response_header
         else:
-            return "", 404
+            return "", 404, self._response_handler
 
     # ***
     # *  REST commands for Order
     # ***
 
     def get_orders_json_dict(self):
-        order_item = {}
         all_order_dicts = []
         order = Delectable.order.Order 
         if "date" in flask.request.args:
@@ -132,31 +116,27 @@ class DelectableREST():
             orders = order.get_all_orders()
 
         for individual_order in orders:
-            order_item['id'] = individual_order.get_order_id()
-            order_item['order_date'] = individual_order.get_order_date().strftime("%Y%m%d")
-            order_item['delivery_date'] = individual_order.get_delivery_date().strftime("%Y%m%d")
-            order_item['amount'] = individual_order.get_total_cost()
-            order_item['surcharge'] = individual_order.get_surcharge_considering_day()
-            order_item['status'] = individual_order.get_delivery_status()
+            order_item = individual_order.get_order_details_in_dict()
             order_item['ordered_by'] = individual_order.get_customer().get_email()
-
+            del order_item['note']
+            del order_item['delivery_address']
+            del order_item['order_detail']
             all_order_dicts.append(order_item)
-            order_item = {}
         return json.dumps(all_order_dicts) , 200, self._response_header
 
     def put_order_json_dict(self):
         # Ensuring all necessary fields are filled:
         if (not flask.request.json 
-        or not 'delivery_date' in flask.request.json
-        or not 'delivery_address' in flask.request.json 
-        or not 'personal_info' in flask.request.json
-        or not 'note' in flask.request.json
-        or not 'order_detail' in flask.request.json
-        or not 'name' in flask.request.json['personal_info']
-        or not 'email' in flask.request.json['personal_info']
-        or not 'phone' in flask.request.json['personal_info']):
-            # Also check for all components of orders? Not sure how.
+            or not 'delivery_date' in flask.request.json
+            or not 'delivery_address' in flask.request.json 
+            or not 'personal_info' in flask.request.json
+            or not 'note' in flask.request.json
+            or not 'order_detail' in flask.request.json
+            or not 'name' in flask.request.json['personal_info']
+            or not 'email' in flask.request.json['personal_info']
+            or not 'phone' in flask.request.json['personal_info']):
             print("Error: not all components for order present.  Aborting.")
+
         else:
             # getting the date:
             parsed_date = self.string_to_date(flask.request.json['delivery_date'])
@@ -245,11 +225,10 @@ class DelectableREST():
         return json.dumps(customer_dict_list) , 200, self._response_header
 
     def get_customer_by_id_json_dict(self, customer_id):
-        customer = Delectable.customer.Customer
         order = Delectable.order.Order
-        customers = customer.get_all_customers()
         orders = order.get_all_orders()
-        order_item = {}
+        customers = order.get_all_customers()
+
         customer_orders = []
         customer_found = False
 
@@ -314,13 +293,13 @@ class DelectableREST():
     def put_item_on_menu_json_dict(self):
         # Ensuring all necessary fields are filled:
         if (not flask.request.json 
-        or not 'name' in flask.request.json
-        or not 'price_per_person' in flask.request.json
-        or not 'minimum_order' in flask.request.json
-        or not 'categories' in flask.request.json):
-            # Also check for all components of categories? Not sure how.
+            or not 'name' in flask.request.json
+            or not 'price_per_person' in flask.request.json
+            or not 'minimum_order' in flask.request.json
+            or not 'categories' in flask.request.json):
             print("Error: not all components for item PUT are present.  Aborting.")
             return "", 400, self._response_header
+
         else:
             parsed_name = flask.request.json['name']
             parsed_price_per_person = float(flask.request.json['price_per_person'])
@@ -338,8 +317,8 @@ class DelectableREST():
 
     def post_item_price_json_dict(self, menu_id):
         if (not flask.request.json
-        or not 'id' in flask.request.json
-        or not 'price_per_person' in flask.request.json):
+            or not 'id' in flask.request.json
+            or not 'price_per_person' in flask.request.json):
             print("Error: not all components for item price change are present.  Aborting.")
             return "", 400, self._response_header
         else:
@@ -370,7 +349,7 @@ class DelectableREST():
         orders = order.get_all_orders()
         
         if (not flask.request.json
-        or not 'id' in flask.request.json):
+            or not 'id' in flask.request.json):
             print("Error: missing arguments")
             return "", 204, self._response_header
         else:

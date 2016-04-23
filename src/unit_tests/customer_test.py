@@ -67,3 +67,22 @@ def test_customer_set_phone_number():
     test_customer = customer.Customer("test Last Name", "test First Name", "test email address", "123456789")
     test_customer.set_phone_number("5555555555")
     assert((test_customer.get_phone_number() == "5555555555"), "set phone number in customer not correctly set")
+
+# Testing customer equality
+
+def test_customer_equality():
+    test_customer_1 = customer.Customer("test Last Name", "test First Name", "test email address", "123456789")
+    test_customer_2 = customer.Customer("test Last Name", "test First Name", "test email address", "123456789")
+    assert((test_customer_1 == test_customer_2), "customer equality not functioning")
+
+# Testing customer dict output format
+
+def test_customer_details_dict():
+    test_customer = customer.Customer("test Last Name", "test First Name", "test email address", "123456789")
+    expected = {'id'    : test_customer.get_customer_id(),
+                'name'  : "test Last Name",
+                'email' : "test email address",
+                'phone' : "123456789",
+                }
+    assert((test_customer.get_customer_details_dict() == expected), "customer details dictionary not correctly formatted")
+

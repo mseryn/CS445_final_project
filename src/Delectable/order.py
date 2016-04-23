@@ -121,7 +121,7 @@ class Order():
         return self._delivery_date
 
     def set_delivery_date(self, new_date):
-        if type(new_date) is datetime.datetime:
+        if type(new_date) is datetime:
             self._order_date = new_date
 
     def get_surcharge(self):
