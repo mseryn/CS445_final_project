@@ -390,4 +390,4 @@ class DelectableREST():
 
 if __name__ == "__main__":
     api = DelectableREST()
-    api.run(port=8080)
+    api.run()

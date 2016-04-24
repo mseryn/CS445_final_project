@@ -24,19 +24,66 @@ General Instructions:
 To install dependencies:
 > ./setup.sh 
 
-To run a local version of the API:
-> make live
-
 To run unit test suite:
 > make unit_test
 
-To remove all pycache directories and compiled Python files:
-> make clean
+To run a local version of the API:
+> make live
+NOTE: This will consume a terminal, but it will also give valuable information
+      as the service is interacted with.
 
+API Instructions:
+The file curl_example_commands.txt in examples/ has a list of example API
+commands that can be executed via curl, a terminal web service.
 
-Specific Instructions:
+While the service is live, in separate terminal, the following commands will
+execute various sample API calls:
 
-FINISH
+To add an item to the menu:
+> make example_add_itemA_to_menu
+> make example_add_itemB_to_menu
+
+To get menu:
+> make example_get_menu
+
+To get an item from menu:
+> make example_get_menu_item_0
+> make example_get_menu_item_1
+
+To modify the price of an item on the menu:
+> make example_modify_price_item_0
+
+To get surcharge:
+> make example_get_surcharge
+
+To modify surcharge:
+> make example_modify_surcharge
+
+To get an order:
+> make example_get_all_orders
+> make example_get_order_0
+> make example_get_order_1
+> make example_get_order_by_date
+
+To set an order's status to "delivered":
+> make example_set_order_0_status_to_delivered
+> make example_set_order_1_status_to_delivered
+
+To cancel an order:
+> make example_cancel_order_0
+
+To get a report:
+> make example_reports_list
+> make example_revenue_report
+> make example_report_deliveries_today
+> make example_report_deliveries_tomorrow
+
+To get a customer:
+> make example_get_all_customers
+> make example_get_customer_0
+> make example_get_customer_1
+> make example_get_customer_by_name
+
 
 
 Additional Information:
