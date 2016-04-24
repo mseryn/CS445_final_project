@@ -1,15 +1,49 @@
-###
-#   Written by Melanie Cornelius (nee Dooley)
-#  
-#   for final project in: 
-#   CS 445: Object Oriented Design Programming
-#   Section 02, Spring 2016
-#   Illinois Institute of Technology
-#  
-#   student email: mdooley1@hawk.iit.edu
-#   github username: mseryn
-###
+###############################################################################
+### ----------------------------------------------------------------------- ###
+### ----------------------------- DELECTABLE -------------------------------###
+### -------------------------- Catering Service ----------------------------###
+### ----------------------------------------------------------------------- ###
+###############################################################################
+ 
+									  ___          /|
+						 ||||     .-"`   `"-.     } |  __
+					|||| ||||   .'  .-'`'-.  '.   } | /  \
+					|||| \  /  /  .'       '.  \  } | ;();
+					\  /  ||  /  ;           ;  \  \| \  /
+					 ||   ||  | ;             ; |  ||  ||
+					 %%   %%  | ;             ; |  %%  %%
+					 %%   %%  \  ;           ;  /  %%  %%
+					 %%   %%   \  '.       .'  /   %%  %%
+					 %%   %%    '.  `-.,.-'  .'    %%  %%
+				jgs  %%   %%      '-.,___,.-'      %%  %% 
+ 
+ 
+ 
+### ----------------------------- Description ----------------------------- ###
 
+Delectable is a REST service with support for a catering business.
+It has support for such functionality as:
+
+    * Mantaining a menu complete with items
+    * Creation and modification of items on the menu
+    * Creation of orders inclusing customer details
+    * Mantenance of a comprehensive list of customers and orders
+    * Production of reports detailing deliveries and revenues
+
+
+### -------------------- Author and Contact Information ------------------- ###
+
+Written by Melanie Cornelius (nee Dooley)
+
+For final project in: 
+CS 445: Object Oriented Design Programming
+Section 02, Spring 2016
+Illinois Institute of Technology
+
+student email: mdooley1@hawk.iit.edu
+github username: mseryn
+
+### ---------------------------- Dependencies ----------------------------- ###
 
 Dependencies: 
     Python 3
@@ -19,7 +53,7 @@ Dependencies:
     curl....... For running sample uses
 
 
-General Instructions:
+### ------------------------ General Instructions ------------------------- ###
 
 To install dependencies:
 > ./setup.sh 
@@ -32,9 +66,7 @@ To run a local version of the API:
 NOTE: This will consume a terminal, but it will also give valuable information
       as the service is interacted with.
 
-API Instructions:
-The file curl_example_commands.txt in examples/ has a list of example API
-commands that can be executed via curl, a terminal web service.
+### -------------------------- API Instructions --------------------------- ###
 
 While the service is live, in separate terminal, the following commands will
 execute various sample API calls:
@@ -86,7 +118,35 @@ To get a customer:
 
 
 
-Additional Information:
+### ----------------------------- Known Bugs ------------------------------ ###
+
+Information output by API contains all the same information as the sample
+API, but the order and output-style of the information is different.
+Output from Python dictionaries is unordered.
+
+Since databases were strictly prohibited for use in this project, all storage
+is implemented in the back-end, and there is thus no persistance between 
+live instances of the service.  This is less a bug and more of a discussion
+of the effect of a requirement, but it's important to keep the lack of
+persistance in mind while using the product as-is.
+
+
+### -------------------- Credits and Acknowledgements --------------------- ###
+
+Zack Cornelius, a software developer and my husband, was instrumental in
+fighting through bugs and coaxing out a more graceful framework.
+
+Miguel Grinberg's blog posts on implementing a REST API in Python's Flask
+were useful throughout the project.
+One commonly-visited page is here:
+http://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flask
+
+ASCII Art at the top of this file courtesy of artist "jgs" and retrieved from
+http://www.chris.com/ascii/joan/www.geocities.com/SoHo/7373/food.html
+
+
+
+### ------------------------ Additional Information ----------------------- ###
 
 memo_final_project_mdooley1.pdf contains statistics and required commentary.
 
@@ -99,5 +159,8 @@ To pull Melanie Dooley's assignment repository:
 
 
 
-This code is licensed under the GNU V.3 General Use license.
-See 'LICENSE' for full details.
+### ----------------------------------------------------------------------- ###
+### ----------------------------------------------------------------------- ###
+
+         This code is licensed under the GNU V.3 General Use license.
+                        See 'LICENSE' for full details.
