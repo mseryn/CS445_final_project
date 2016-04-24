@@ -38,7 +38,7 @@ example_add_orderB:
 	curl -i -H "Content-Type: application/json" -X PUT -d '{"delivery_date": "20160423", "delivery_address": "3501 S State St, Chicago IL 60616","personal_info": {"name": "Sample Student","email": "student@hawk.iit.edu","phone": "111-222-3456"},"note": "Please call ahead, the doors will be locked","order_detail": [{"id": 1,"count": 10}, {"id": 0,"count": 15}]}' http://localhost:5000/delectable/order
 
 example_get_all_orders:
-	http://localhost:5000/delectable/order
+	curl -i http://localhost:5000/delectable/order
 
 example_get_order_0:
 	curl -i http://localhost:5000/delectable/order/0

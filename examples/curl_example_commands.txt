@@ -1,0 +1,52 @@
+
+Get menu:
+curl -i http://localhost:5000/delectable/menu
+
+Get item 0 from menu:
+curl -i http://localhost:5000/delectable/menu/0
+
+Add item example:
+curl -i -H "Content-Type: application/json" -X PUT -d '{"name": "Lasagna", "price_per_person": 2.49, "minimum_order": 6, "categories": [{"name": "organic"}, {"name": "vegetarian"}]}' http://localhost:5000/delectable/admin/menu
+
+Modify the cost per person of an item:
+curl -i -X POST -d '{"id": 0, "price_per_person": 3.99}' http://localhost:5000/delectable/admin/menu/0  -H "Content-Type: application/json"
+
+Example order submit:
+curl -i -H "Content-Type: application/json" -X PUT -d '{"delivery_date": "20160301", "delivery_address": "10 West 31st ST, Chicago IL 60616","personal_info": {"name": "Virgil B","email": "virgil@example.com","phone": "312-456-7890"},"note": "Room SB-214","order_detail": [{"id": 1,"count": 8}, {"id": 0,"count": 7}]}' http://localhost:5000/delectable/order
+
+Get all orders:
+curl -i http://localhost:5000/delectable/order
+
+Get order 0:
+curl -i http://localhost:5000/delectable/order/0
+
+Get order by date:
+curl -i http://localhost:5000/delectable/order?date=YYYYMMDD
+
+Modify order status to delivered:
+curl -i -X POST -d '{"id": 0}' http://localhost:5000/delectable/admin/delivery/0  -H "Content-Type: application/json"
+
+Example order cancellation:
+curl -i -X POST -d '{"id": 0}' -H "Content-Type: application/json" http://localhost:5000/delectable/order/cancel/0
+
+Get all customers:
+curl -i http://localhost:5000/delectable/customer
+
+Get customer 0:
+curl -i http://localhost:5000/delectable/customer/0
+
+Get customer by query, in this case, "Student":
+curl -i -X GET -d '{"key": "Student"}' http://localhost:5000/delectable/customer -H "Content-Type: application/json"
+
+Get reports listing:
+	curl -i http://localhost:5000/delectable/report
+
+Get report by id:
+curl -i http://localhost:5000/delectable/report/<order id>
+
+Get surcharge:
+curl -i http://localhost:5000/delectable/admin/surcharge
+
+Modify surcharge:
+curl -i -X POST -d '{"surcharge": 15.25}' http://localhost:5000/delectable/admin/surcharge  -H "Content-Type: application/json"
+

@@ -68,6 +68,9 @@ NOTE: This will consume a terminal, but it will also give valuable information
 
 ### -------------------------- API Instructions --------------------------- ###
 
+In examples/ the file curl_example_commands.txt has a list of commands for the
+API.
+
 While the service is live, in separate terminal, the following commands will
 execute various sample API calls:
 
